@@ -1,41 +1,99 @@
 install_one <- 
 function(repo, branch = NULL, host = "github.com", 
-         credentials = NULL, build_args = NULL, verbose = FALSE, ...) {
+         credentials = NULL, build_args = NULL, verbose = FALSE, 
+         dependencies = c("Depends", "Imports"), ...) {
 
     wd <- getwd()
     on.exit(setwd(wd))
     setwd(tempdir())
     
-    pkgname <- strsplit(repo, "/")[[1]][2]
-    d <- tempfile(pattern = pkgname)
-    git2r::clone(url = paste0("https://", host, "/", repo, ".git"), 
-                 local_path = d, 
-                 branch = branch, 
-                 credentials = credentials,
-                 progress = verbose)
-    on.exit(unlink(d, recursive = TRUE))
-    
-    description <- read.dcf(file.path(d, "DESCRIPTION"))
-    # handle dependencies here
-    jj <- intersect(c("Depends", "Imports", "Suggests"), colnames(description))
-    val <- unlist(strsplit(description[, jj], ","), use.names = FALSE)
-    val <- gsub("\\s.*", "", trimws(val))
-    deps <- val[val != "R"]
-    need <- deps[!deps %in% installed.packages()[,"Package"]]
-    if (length(need)) {
-        utils::install.packages(need, verbose = verbose, ...)
+    # identify refs, subdirectories, and pull requests
+    reponame <- strsplit(repo, "/")[[1]]
+    if (!is.na(reponame[3])) {
+        pkgname <- reponame[2]
+        ref <- NA_character_
+        pull <- NA_character_
+        subdir <- paste0(reponame[3:length(reponame)], collapse = "/")
+    } else if (grepl("@", reponame[2])) {
+        pkgname <- strsplit(reponame[2], "@")[[1]][1]
+        ref <- strsplit(reponame[2], "@")[[1]][2]
+        pull <- NA_character_
+        subdir <- NA_character_
+    } else if (grepl("#", reponame[2])) {
+        pkgname <- strsplit(reponame[2], "#")[[1]][1]
+        ref <- NA_character_
+        pull <- strsplit(reponame[2], "#")[[1]][2]
+        subdir <- NA_character_
+    } else {
+        pkgname <- reponame[2]
+        ref <- NA_character_
+        pull <- NA_character_
+        subdir <- NA_character_
     }
     
+    d <- tempfile(pattern = pkgname)
+    on.exit(unlink(d, recursive = TRUE))
+    if (is.na(pull)) {
+        git2r::clone(url = paste0("https://", host, "/", 
+                                  paste(reponame[1], pkgname, sep = "/"), 
+                                  ".git"), 
+                     local_path = d, 
+                     branch = branch, 
+                     credentials = credentials,
+                     progress = verbose)
+        # checkout commits, tags, or directories
+        gitrepo <- git2r::repository(d)
+        if (!is.na(ref)) {
+            # commits
+            a <- grep(substring(ref, 2, nchar(ref)), 
+                      sapply(git2r::commits(gitrepo), methods::slot, "sha"))
+            if (length(a)) {
+                git2r::checkout(git2r::commits(gitrepo)[[a]], force = TRUE)
+            } else {
+                # tags
+                b <- grep(ref, names(git2r::tags(gitrepo)))
+                if (length(b)) {
+                    git2r::checkout(git2r::tags(gitrepo)[[b]], force = TRUE)
+                } else {
+                    stop("Reference (sha or git tag) not found!")
+                }
+            }
+        } else if (!is.na(subdir)) {
+            # subdirectory
+            d <- file.path(d, subdir)
+        }
+    } else {
+        # handle pull request
+        
+    }
     
-    # check for compiled code (modified from devtools::check_build_tools())
+    description <- read.dcf(file.path(d, "DESCRIPTION"))
+    pkgname <- unname(description[, "Package"])
+    
+    # handle dependencies here
+    if (length(dependencies)) {
+        jj <- intersect(dependencies, colnames(description))
+        if (length(jj)) {
+            val <- unlist(strsplit(description[, jj], ","), use.names = FALSE)
+            val <- gsub("\\s.*", "", trimws(val))
+            deps <- val[val != "R"]
+            need <- deps[!deps %in% installed.packages()[,"Package"]]
+            if (length(need)) {
+                utils::install.packages(need, verbose = verbose, quiet = !verbose, ...)
+            }
+        }
+    }
+    
+    # check for compiled code
     if (file.exists(file.path(d, "src"))) {
-        # do a check
+        # do a check for build tools?
+        # could modify from devtools::check_build_tools()
     }
     
     # build package
-    success <- system(paste0("R CMD build ", d, " ", build_args))
+    success <- system2("R", paste0("CMD build ", d, " ", build_args), stdout = FALSE)
     if (success != 0) {
-        success <- system(paste0(file.path(R.home("bin"), "R.exe"), " CMD build ", d, " ", build_args))
+        success <- system2(file.path(R.home("bin"), "R.exe"), paste0("CMD build ", d, " ", build_args), stdout = FALSE)
         if (success != 0) {
             stop("Package build failed!")
         }
@@ -52,8 +110,9 @@ function(repo, branch = NULL, host = "github.com",
     utils::install.packages(pkgname, type = "source", 
                             repos = c("TemporaryRepo" = paste0("file:", repodir), options("repos")[[1]]),
                             verbose = verbose,
+                            quiet = !verbose,
                             ...)
-    return(utils::packageVersion(pkgname))
+    return(as.character(utils::packageVersion(pkgname)))
 }
 
 install_github <- 
@@ -63,14 +122,14 @@ function(repo,
          credentials = NULL, 
          build_args = NULL, #" --no-save --no-environ --no-restore --silent", 
          verbose = FALSE, 
+         dependencies = c("Depends", "Imports"),
          ...) {
-    stats::setNames(lapply(repo,
-                           install_one,
-                           branch = branch, 
-                           host = host,
-                           credentials = credentials,
-                           build_args = build_args,
-                           verbose = verbose,
-                           ...), 
-                    sapply(strsplit(repo, "/"), `[`, 2))
+    sapply(repo,
+           install_one,
+           branch = branch, 
+           host = host,
+           credentials = credentials,
+           build_args = build_args,
+           verbose = verbose,
+           ...)
 }

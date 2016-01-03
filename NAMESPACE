@@ -1,5 +1,6 @@
 export(install_github)
-importFrom(git2r, init, clone, config)
-importFrom(utils, install.packages, installed.packages, packageVersion)
+importFrom(git2r, init, clone, config, commits)
 importFrom(drat, initRepo, insertPackage)
+importFrom(utils, install.packages, installed.packages, packageVersion)
 importFrom(stats, setNames)
+importFrom(methods, slot)
