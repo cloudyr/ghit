@@ -32,7 +32,7 @@ function(repo, branch = NULL, host = "github.com",
   }
   
   # build package
-  success <- system(paste0(Sys.which("R"), " CMD build ", d, " ", build_args))
+  success <- system(paste0(file.path(R.home("bin"), "R"), " CMD build ", d, " ", build_args))
   if (success != 0) {
     stop("Package build failed!")
   }
