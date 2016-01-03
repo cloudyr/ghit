@@ -1,7 +1,7 @@
 Package: ghit
 Type: Package
 Title: Lightweight GitHub Package Installer
-Version: 0.1.2
+Version: 0.1.3
 Date: 2016-01-02
 Maintainer: Thomas J. Leeper <thosjleeper@gmail.com>
 Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"), email = "thosjleeper@gmail.com"))
