@@ -34,10 +34,24 @@ install_github("leeper/ghit")
 
 ## Package Functionality ##
 
-Like `devtools::install_github()`, `ghit::install_github()` is a vectorized package installer:
+Like `devtools::install_github()`, `ghit::install_github()` is a vectorized package installer that is extremely flexible:
 
 ```R
+library("ghit")
+
+# single package
 install_github("hadley/devtools")
+
+# multiple packages
 install_github(c("hadley/devtools", "cloudyr/travisci"))
+
+# package in subdirectory
+install_github("pablobarbera/twitter_ideology/pkg/tweetscores")
+
+# package in misnamed repository
+install_github("klutometis/roxygen")
+
+# package at a given commit
+install_github("leeper/rio@a8d0fca27")
 ```
 

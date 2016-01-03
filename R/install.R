@@ -32,7 +32,7 @@ function(repo, branch = NULL, host = "github.com",
     }
     
     d <- tempfile(pattern = pkgname)
-    on.exit(unlink(d, recursive = TRUE))
+    on.exit(unlink(d, recursive = TRUE), add = TRUE)
     if (is.na(pull)) {
         git2r::clone(url = paste0("https://", host, "/", 
                                   paste(reponame[1], pkgname, sep = "/"), 
@@ -46,14 +46,14 @@ function(repo, branch = NULL, host = "github.com",
         if (!is.na(ref)) {
             # commits
             a <- grep(substring(ref, 2, nchar(ref)), 
-                      sapply(git2r::commits(gitrepo), methods::slot, "sha"))
+                      sapply(git2r::commits(gitrepo), methods::slot, "sha"), fixed = TRUE)
             if (length(a)) {
-                git2r::checkout(git2r::commits(gitrepo)[[a]], force = TRUE)
+                git2r::checkout(git2r::commits(gitrepo)[[a[1]]], force = TRUE)
             } else {
                 # tags
-                b <- grep(ref, names(git2r::tags(gitrepo)))
+                b <- grep(ref, names(git2r::tags(gitrepo)), fixed = TRUE)
                 if (length(b)) {
-                    git2r::checkout(git2r::tags(gitrepo)[[b]], force = TRUE)
+                    git2r::checkout(git2r::tags(gitrepo)[[b[1]]], force = TRUE)
                 } else {
                     stop("Reference (sha or git tag) not found!")
                 }
@@ -99,10 +99,10 @@ function(repo, branch = NULL, host = "github.com",
         }
     }
     tarball <- paste0(pkgname, "_", description[1,"Version"], ".tar.gz")
-    on.exit(unlink(tarball))
+    on.exit(unlink(tarball), add = TRUE)
     
     repodir <- file.path(tempdir(), "drat")
-    on.exit(unlink(repodir))
+    on.exit(unlink(repodir), add = TRUE)
     if (!dir.exists(repodir)) {
         drat::initRepo(name = "drat", basepath = tempdir())
     }
