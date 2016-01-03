@@ -25,10 +25,10 @@ options("repos" = "http://cran.rstudio.com")
 tmp <- "./tmplib"
 dir.create(tmp)
 # install a single package
-install_github("leeper/ghit", lib = tmp)
+ghit::install_github("leeper/ghit", lib = tmp)
 
 # install multiple packages
-install_github(c("eddelbuettel/drat", "leeper/ghit"), lib = tmp)
+ghit::install_github(c("eddelbuettel/drat", "leeper/ghit"), lib = tmp)
 
 # cleanup
 unlink(tmp, recursive = TRUE)
