@@ -29,6 +29,15 @@ install_github("leeper/ghit")
 [![CRAN Version](http://www.r-pkg.org/badges/version/ghit)](http://cran.r-project.org/package=ghit)
 ![Downloads](http://cranlogs.r-pkg.org/badges/ghit)
 [![Travis-CI Build Status](https://travis-ci.org/leeper/ghit.png?branch=master)](https://travis-ci.org/leeper/ghit)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/40ua5l06jw0gjyjb?svg=true)](https://ci.appveyor.com/project/leeper/ghit)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/0nr5r6fycm8jcxm0?svg=true)](https://ci.appveyor.com/project/leeper/ghit)
 [![codecov.io](http://codecov.io/github/leeper/ghit/coverage.svg?branch=master)](http://codecov.io/github/leeper/ghit?branch=master)
+
+## Package Functionality ##
+
+Like `devtools::install_github()`, `ghit::install_github()` is a vectorized package installer:
+
+```R
+install_github("hadley/devtools")
+install_github(c("hadley/devtools", "cloudyr/travisci"))
+```
 
