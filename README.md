@@ -53,5 +53,9 @@ install_github("klutometis/roxygen")
 
 # package at a given commit
 install_github("leeper/rio@a8d0fca27")
+
+# package from a branch
+install_github("kbenoit/quanteda[dev]") # preferred syntax
+install_github("kbenoit/quanteda", branch = "dev") # alternative syntax
 ```
 

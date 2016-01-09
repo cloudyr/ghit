@@ -7,24 +7,40 @@ function(repo, branch = NULL, host = "github.com",
     on.exit(setwd(wd))
     setwd(tempdir())
     
-    # identify refs, subdirectories, and pull requests
+    basic_args <- " --no-save --no-environ --no-restore --silent"
+    
     reponame <- strsplit(repo, "/")[[1]]
+    # branch (not specified by branch argument)
+    if (grepl("[", reponame[2], fixed = TRUE)) {
+        a <- strsplit(reponame[2], "[", fixed = TRUE)[[1]]
+        pkgname <- a[1]
+        b <- strsplit(a[2], "]", fixed = TRUE)[[1]]
+        branch <- b[1]
+        reponame <- c(reponame[1], paste0(a[1], b[2]))
+        rm(a)
+        rm(b)
+    }
+    # identify refs, subdirectories, and pull requests
     if (!is.na(reponame[3])) {
+        # sub-directory
         pkgname <- reponame[2]
         ref <- NA_character_
         pull <- NA_character_
         subdir <- paste0(reponame[3:length(reponame)], collapse = "/")
     } else if (grepl("@", reponame[2])) {
+        # reference/commit
         pkgname <- strsplit(reponame[2], "@")[[1]][1]
         ref <- strsplit(reponame[2], "@")[[1]][2]
         pull <- NA_character_
         subdir <- NA_character_
     } else if (grepl("#", reponame[2])) {
+        # pull request
         pkgname <- strsplit(reponame[2], "#")[[1]][1]
         ref <- NA_character_
         pull <- strsplit(reponame[2], "#")[[1]][2]
         subdir <- NA_character_
     } else {
+        # top-level package
         pkgname <- reponame[2]
         ref <- NA_character_
         pull <- NA_character_
@@ -77,9 +93,11 @@ function(repo, branch = NULL, host = "github.com",
             val <- unlist(strsplit(description[, jj], ","), use.names = FALSE)
             val <- gsub("\\s.*", "", trimws(val))
             deps <- val[val != "R"]
-            need <- deps[!deps %in% installed.packages()[,"Package"]]
-            if (length(need)) {
-                utils::install.packages(need, verbose = verbose, quiet = !verbose, ...)
+            if (length(deps)) {
+                need <- deps[!deps %in% installed.packages()[,"Package"]]
+                if (length(need)) {
+                    utils::install.packages(need, verbose = verbose, INSTALL_opts = basic_args, quiet = !verbose, ...)
+                }
             }
         }
     }
@@ -91,9 +109,10 @@ function(repo, branch = NULL, host = "github.com",
     }
     
     # build package
-    success <- system2("R", paste0("CMD build ", d, " ", build_args), stdout = FALSE)
+    arg <- paste0("CMD build ", d, " ", build_args, basic_args)
+    success <- system2("R", arg, stdout = FALSE)
     if (success != 0) {
-        success <- system2(file.path(R.home("bin"), "R.exe"), paste0("CMD build ", d, " ", build_args), stdout = FALSE)
+        success <- system2(file.path(R.home("bin"), "R.exe"), arg, stdout = FALSE)
         if (success != 0) {
             stop("Package build failed!")
         }
@@ -110,6 +129,7 @@ function(repo, branch = NULL, host = "github.com",
     utils::install.packages(pkgname, type = "source", 
                             repos = c("TemporaryRepo" = paste0("file:", repodir), options("repos")[[1]]),
                             verbose = verbose,
+                            INSTALL_opts = basic_args, 
                             quiet = !verbose,
                             ...)
     return(as.character(utils::packageVersion(pkgname)))
@@ -120,12 +140,13 @@ function(repo,
          branch = NULL, 
          host = "github.com", 
          credentials = NULL, 
-         build_args = NULL, #" --no-save --no-environ --no-restore --silent", 
+         build_args = NULL, 
          verbose = FALSE, 
          dependencies = c("Depends", "Imports"),
          ...) {
-    sapply(repo,
+    vapply(repo,
            install_one,
+           FUN.VALUE = character(length(repo)),
            branch = branch, 
            host = host,
            credentials = credentials,
