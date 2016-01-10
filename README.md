@@ -13,7 +13,7 @@ install.packages("ghit")
 The latest development version on GitHub can be installed using itself:
 
 ```R
-ghit::install_github("ghit")
+ghit::install_github("leeper/ghit")
 ```
 
 Or, lacking that, using **devtools**:
