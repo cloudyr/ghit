@@ -4,7 +4,7 @@
 \usage{
 install_github(repo, branch = NULL, host = "github.com", 
                credentials = NULL, build_args = NULL, 
-               verbose = FALSE, dependencies = c("Depends", "Imports"), ...)
+               verbose = FALSE, dependencies = c("Depends", "Imports", "Suggests"), ...)
 }
 \arguments{
     \item{repo}{A character vector naming one or more GitHub repository containing, at its top level, an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or pull request (\dQuote{leeper/ghit/#1}).}

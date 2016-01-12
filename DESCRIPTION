@@ -1,8 +1,8 @@
 Package: ghit
 Type: Package
 Title: Lightweight GitHub Package Installer
-Version: 0.1.6
-Date: 2016-01-09
+Version: 0.1.7
+Date: 2016-01-12
 Maintainer: Thomas J. Leeper <thosjleeper@gmail.com>
 Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"), email = "thosjleeper@gmail.com"))
 Description: A lightweight, vectorized drop-in replacement for 'devtools::install_github()' that uses native git and R methods to clone and install a package from GitHub.

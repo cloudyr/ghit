@@ -1,13 +1,14 @@
 install_one <- 
 function(repo, branch = NULL, host = "github.com", 
          credentials = NULL, build_args = NULL, verbose = FALSE, 
-         dependencies = c("Depends", "Imports"), ...) {
+         dependencies = c("Depends", "Imports", "Suggests"), ...) {
 
     wd <- getwd()
     on.exit(setwd(wd))
     setwd(tempdir())
     
-    basic_args <- " --no-save --no-environ --no-restore --silent"
+    #basic_args <- " --no-save --no-environ --no-restore --silent"
+    basic_args <- " "
     
     reponame <- strsplit(repo, "/")[[1]]
     # branch (not specified by branch argument)
@@ -142,7 +143,7 @@ function(repo,
          credentials = NULL, 
          build_args = NULL, 
          verbose = FALSE, 
-         dependencies = c("Depends", "Imports"),
+         dependencies = c("Depends", "Imports", "Suggests"),
          ...) {
     vapply(repo,
            install_one,

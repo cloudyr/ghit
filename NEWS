@@ -1,3 +1,7 @@
+# CHANGES TO v0.1.7 #
+
+ * Install suggested packages by default. (#9)
+
 # CHANGES TO v0.1.5 #
 
  * Exposed a `dependencies` argument to control installation of dependencies.
