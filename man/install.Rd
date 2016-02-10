@@ -4,6 +4,7 @@
 \usage{
 install_github(repo, branch = NULL, host = "github.com", 
                credentials = NULL, build_args = NULL, 
+               build_vignettes = TRUE, 
                verbose = FALSE, dependencies = c("Depends", "Imports", "Suggests"), ...)
 }
 \arguments{
@@ -12,6 +13,7 @@ install_github(repo, branch = NULL, host = "github.com",
     \item{host}{A character string naming a host, to enable installation of enterprise-hosted GitHub packages.}
     \item{credentials}{An argument passed to the \code{credentials} argument to \code{\link[git2r]{clone}}.}
     \item{build_args}{A character string used to control the package build, passed to \code{R CMD build}.}
+    \item{build_args}{A logical specifying whether to build package vignettes, passed to \code{R CMD build}. Can be slow. Note: The default is \code{TRUE}, unlike in \code{devtools::install_github()}.}
     \item{verbose}{A logical specifying whether to print details of package building and installation.}
     \item{dependencies}{A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).}
     \item{...}{Additional arguments to control installation of package, passed to \code{\link[utils]{install.packages}}.}

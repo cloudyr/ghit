@@ -1,6 +1,7 @@
 install_one <- 
 function(repo, branch = NULL, host = "github.com", 
-         credentials = NULL, build_args = NULL, verbose = FALSE, 
+         credentials = NULL, build_args = NULL, build_vignettes = TRUE,
+         verbose = FALSE, 
          dependencies = c("Depends", "Imports", "Suggests"), ...) {
 
     wd <- getwd()
@@ -110,6 +111,12 @@ function(repo, branch = NULL, host = "github.com",
     }
     
     # build package
+    if (!build_vignettes) {
+        if (!grepl("build-vignettes", build_args)) {
+            build_args <- paste0(build_args, " --no-build-vignettes")
+        }
+    }
+    
     arg <- paste0("CMD build ", d, " ", build_args, basic_args)
     success <- system2("R", arg, stdout = FALSE)
     if (success != 0) {

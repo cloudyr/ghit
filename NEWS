@@ -1,3 +1,7 @@
+# CHANGES TO v0.1.8 #
+
+ * Add an argument `build_vignettes` to control vignette building. (#9)
+
 # CHANGES TO v0.1.7 #
 
  * Install suggested packages by default. (#9)
