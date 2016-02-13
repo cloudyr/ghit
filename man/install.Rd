@@ -2,19 +2,19 @@
 \alias{install_github}
 \title{Install R package from GitHub}
 \usage{
-install_github(repo, branch = NULL, host = "github.com", 
-               credentials = NULL, build_args = NULL, 
-               build_vignettes = TRUE, 
-               verbose = FALSE, dependencies = c("Depends", "Imports", "Suggests"), ...)
+install_github(repo, host = "github.com", credentials = NULL, 
+               build_args = NULL, build_vignettes = TRUE, verbose = FALSE, 
+               repos = getOption("repos", c(CRAN = "http://cloud.r-project.org")),
+               dependencies = c("Depends", "Imports", "Suggests"), ...)
 }
 \arguments{
-    \item{repo}{A character vector naming one or more GitHub repository containing, at its top level, an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or pull request (\dQuote{leeper/ghit/#1}).}
-    \item{branch}{A character string naming a branch. The default, \code{NULL}, is the master brannch.}
+    \item{repo}{A character vector naming one or more GitHub repository containing, at its top level, an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a branch (\dQuote{leeper/ghit[dev]}), a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or pull request (\dQuote{leeper/ghit#1}).}
     \item{host}{A character string naming a host, to enable installation of enterprise-hosted GitHub packages.}
-    \item{credentials}{An argument passed to the \code{credentials} argument to \code{\link[git2r]{clone}}.}
+    \item{credentials}{An argument passed to the \code{credentials} argument to \code{\link[git2r]{clone}}. See \code{\link[git2r]{cred_user_pass}} or \code{\link[git2r]{cred_ssh_key}}.}
     \item{build_args}{A character string used to control the package build, passed to \code{R CMD build}.}
-    \item{build_args}{A logical specifying whether to build package vignettes, passed to \code{R CMD build}. Can be slow. Note: The default is \code{TRUE}, unlike in \code{devtools::install_github()}.}
+    \item{build_vignettes}{A logical specifying whether to build package vignettes, passed to \code{R CMD build}. Can be slow. Note: The default is \code{TRUE}, unlike in \code{devtools::install_github()}.}
     \item{verbose}{A logical specifying whether to print details of package building and installation.}
+    \item{repos}{A character vector specifying one or more URLs for CRAN-like repositories from which package dependencies might be installed. By default, value is taken from \code{options("repos")} or set to the CRAN cloud repository.}
     \item{dependencies}{A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).}
     \item{...}{Additional arguments to control installation of package, passed to \code{\link[utils]{install.packages}}.}
 }
@@ -22,18 +22,16 @@ install_github(repo, branch = NULL, host = "github.com",
 \value{A named list of R package versions installed.}
 \author{Thomas J. Leeper, with some code from Josh O'Brien (\href{http://stackoverflow.com/questions/30223957/elegantly-extract-r-package-dependencies-of-a-package-not-listed-on-cran}{on StackOverflow}).}
 \examples{
-r <- options("repos")
-options("repos" = "http://cran.rstudio.com")
-
-tmp <- "./tmplib"
+\dontrun{
+tmp <- file.path(tempdir(), "tmplib")
 dir.create(tmp)
 # install a single package
-ghit::install_github("leeper/ghit", lib = tmp)
+install_github("leeper/webuse", lib = tmp)
 
 # install multiple packages
-ghit::install_github(c("eddelbuettel/drat", "leeper/ghit"), lib = tmp)
+install_github(c("leeper/webuse", "leeper/crandatapkgs"), lib = tmp)
 
 # cleanup
 unlink(tmp, recursive = TRUE)
-options("repos" = r)
+}
 }

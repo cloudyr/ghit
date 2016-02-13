@@ -4,7 +4,7 @@
 
 ## Package Installation ##
 
-The package is available on [CRAN](http://cran.r-project.org/web/packages/ghit/) and can be installed directly in R using:
+The package is available on [CRAN](http://cran.r-project.org/package=ghit) and can be installed directly in R using:
 
 ```R
 install.packages("ghit")
@@ -38,24 +38,59 @@ Like `devtools::install_github()`, `ghit::install_github()` is a vectorized pack
 
 ```R
 library("ghit")
+tmp <- file.path(tempdir(), "tmplib")
+dir.create(tmp)
+on.exit(unlink(tmp))
 
 # single package
-install_github("hadley/devtools")
+install_github("hadley/devtools", lib = tmp)
 
 # multiple packages
-install_github(c("hadley/devtools", "cloudyr/travisci"))
+install_github(c("hadley/devtools", "cloudyr/travisci"), lib = tmp)
 
 # package in subdirectory
-install_github("pablobarbera/twitter_ideology/pkg/tweetscores")
+install_github("pablobarbera/twitter_ideology/pkg/tweetscores", lib = tmp)
 
 # package in misnamed repository
-install_github("klutometis/roxygen")
+install_github("klutometis/roxygen", lib = tmp)
 
 # package at a given commit
-install_github("leeper/rio@a8d0fca27")
+install_github("leeper/rio@a8d0fca27", lib = tmp)
 
 # package from a branch
-install_github("kbenoit/quanteda[dev]") # preferred syntax
-install_github("kbenoit/quanteda", branch = "dev") # alternative syntax
+install_github("kbenoit/quanteda[dev]", lib = tmp)
+```
+
+
+## Profiling ##
+
+ghit is similarly efficient to  `devtools::install_github()`, but is much less verbose by default:
+
+```R
+> system.time(ghit::install_github("leeper/ghit"))
+   user  system elapsed 
+   0.92    0.29    4.64
+
+> system.time(devtools::install_github("leeper/ghit"))
+Downloading GitHub repo leeper/ghit@master
+Installing ghit
+"C:/PROGRA~1/R/R-32~1.3/bin/x64/R" --no-site-file --no-environ --no-save --no-restore CMD INSTALL  \
+  "C:/Users/Thomas/AppData/Local/Temp/RtmpGGraeG/devtools1b6459fa28a1/leeper-ghit-45ac056" --library="C:/Program Files/R/R-3.2.3/library"  \
+  --install-tests 
+
+* installing *source* package 'ghit' ...
+** R
+** inst
+** tests
+** preparing package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+*** arch - i386
+*** arch - x64
+* DONE (ghit)
+   user  system elapsed 
+   1.16    0.12    4.36 
 ```
 

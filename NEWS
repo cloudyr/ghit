@@ -1,3 +1,15 @@
+# CHANGES TO v0.1.14 #
+
+ * Removed drat dependency, which fixed the persistent 'user.name' configuration error. (#11)
+
+# CHANGES TO v0.1.11 #
+
+ * Refactor to vectorize `install_github()` so dependencies are installed collectively.
+
+# CHANGES TO v0.1.9 #
+
+ * Set repo configuration in case global defaults are not set.
+
 # CHANGES TO v0.1.8 #
 
  * Add an argument `build_vignettes` to control vignette building. (#9)
