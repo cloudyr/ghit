@@ -1,0 +1,36 @@
+# CHANGES TO v0.1.14 #
+
+ * Removed drat dependency, which fixed the persistent 'user.name' configuration error. (#11)
+
+# CHANGES TO v0.1.11 #
+
+ * Refactor to vectorize `install_github()` so dependencies are installed collectively.
+
+# CHANGES TO v0.1.9 #
+
+ * Set repo configuration in case global defaults are not set.
+
+# CHANGES TO v0.1.8 #
+
+ * Add an argument `build_vignettes` to control vignette building. (#9)
+
+# CHANGES TO v0.1.7 #
+
+ * Install suggested packages by default. (#9)
+
+# CHANGES TO v0.1.5 #
+
+ * Exposed a `dependencies` argument to control installation of dependencies.
+ * Experiment with references, tags, pull requests, and files.
+
+# CHANGES TO v0.1.3 #
+
+ * Update path to R binary.
+
+# CHANGES TO v0.1.2 #
+
+ * Fix config() error.
+
+# CHANGES TO v0.1.1 #
+
+ * Initial release
