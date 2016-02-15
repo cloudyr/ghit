@@ -55,12 +55,12 @@ test_that("checkout branch", {
 })
 
 context("Commits")
-x4 <- ghit:::parse_reponame("leeper/ghit@6364376b")
+x4 <- ghit:::parse_reponame("leeper/ghit@6d118d08")
 test_that("Parse reponame, ref", {
     expect_true(is.list(x4))
     expect_true(x4$user == "leeper")
     expect_true(x4$pkgname == "ghit")
-    expect_true(x4$ref == "6364376b")
+    expect_true(x4$ref == "6d118d08")
     expect_true(is.na(x4$branch))
     expect_true(is.na(x4$pull))
     expect_true(is.na(x4$subdir))

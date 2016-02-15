@@ -4,13 +4,9 @@ function(repo, host = "github.com", credentials = NULL,
          repos = getOption("repos", c(CRAN = "http://cloud.r-project.org")),
          dependencies = c("Depends", "Imports", "Suggests"), ...) {
 
-    wd <- getwd()
-    on.exit(setwd(wd))
-    setwd(tempdir())
-    
     # setup build args
     #basic_args <- " --no-save --no-environ --no-restore --silent"
-    basic_args <- " "
+    basic_args <- " --vanilla"
     if (is.null(build_args)) {
         build_args <- ""
     }
@@ -37,6 +33,9 @@ function(repo, host = "github.com", credentials = NULL,
         d <- checkout_pkg(p, host = host, credentials = credentials, verbose = verbose)
         on.exit(unlink(d), add = TRUE)
         
+        if (verbose) {
+            message(sprintf("Reading package metadata for '%s'...", x))
+        }
         description <- read.dcf(file.path(d, "DESCRIPTION"))
         p$pkgname <- unname(description[1, "Package"])
         

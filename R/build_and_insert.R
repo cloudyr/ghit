@@ -1,18 +1,15 @@
 build_and_insert <- function(pkgname, d, ver, build_args = "", basic_args = "", verbose = FALSE) {
-    p <- Sys.getenv("PATH")
-    ptmp <- paste0(normalizePath(R.home("bin")), ";", p)
-    Sys.setenv(PATH = ptmp)
-    on.exit(Sys.setenv(PATH = p))
     
-    arg <- paste0("CMD build ", d, " ", build_args, basic_args)
+    arg <- c("CMD build", d, build_args, basic_args)
     if (verbose) {
         message(sprintf("Building package %s...", pkgname))
     }
-    success <- system2("R", arg, stdout = if (verbose) "" else FALSE)
+    rpath <- file.path(R.home("bin"), "R")
+    success <- system2(rpath, arg, stdout = if (verbose) "" else FALSE)
     if (success != 0) {
         stop(sprintf("Package build for %s failed!", pkgname))
     }
-    tarball <- paste0(pkgname, "_", ver, ".tar.gz")
+    tarball <- file.path(paste0(pkgname, "_", ver, ".tar.gz"))
     on.exit(unlink(tarball), add = TRUE)
     
     pkgdir <- file.path(tempdir(), "ghitdrat", "src", "contrib")
