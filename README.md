@@ -1,36 +1,8 @@
 # ghit: Lightweight GitHub Package Installer #
 
-**ghit** provides a lightweight alternative to `devtools::install_github()` that uses git2r and the native R package management functionality to install R packages hosted on GitHub. At present, `devtools::install_github()` provides the most convenient way to install development versions of R packages, but devtools has 16 direct package dependencies and is therefore a quite heavy duty package to load simply to install packages. ghit is therefore a simpler alternative to perform the single task of installing GitHub packages without the rest of devtools.
+**ghit** provides a lightweight alternative to `devtools::install_github()` that uses git2r and the native R package management functionality to install R packages hosted on GitHub. At present, `devtools::install_github()` provides the most convenient way to install development versions of R packages, but devtools has 16 direct package dependencies and is therefore a quite heavy duty package to load simply to install packages.
 
-## Package Installation ##
-
-The package is available on [CRAN](http://cran.r-project.org/package=ghit) and can be installed directly in R using:
-
-```R
-install.packages("ghit")
-```
-
-The latest development version on GitHub can be installed using itself:
-
-```R
-ghit::install_github("leeper/ghit")
-```
-
-Or, lacking that, using **devtools**:
-
-```R
-if(!require("devtools")){
-    install.packages("devtools")
-    library("devtools")
-}
-install_github("leeper/ghit")
-```
-
-[![CRAN Version](http://www.r-pkg.org/badges/version/ghit)](http://cran.r-project.org/package=ghit)
-![Downloads](http://cranlogs.r-pkg.org/badges/ghit)
-[![Travis-CI Build Status](https://travis-ci.org/leeper/ghit.png?branch=master)](https://travis-ci.org/leeper/ghit)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/0nr5r6fycm8jcxm0?svg=true)](https://ci.appveyor.com/project/leeper/ghit)
-[![codecov.io](http://codecov.io/github/leeper/ghit/coverage.svg?branch=master)](http://codecov.io/github/leeper/ghit?branch=master)
+ghit is therefore a simpler alternative to perform the single task of installing GitHub packages without the rest of devtools. It achieves this by using git2r to pull GitHub packages (including those required authentication), and relying on native R tools for building packages, storing those packages in a disposable CRAN-like repository, and installing them (and their dependencies) with `install.packages()`.
 
 ## Package Functionality ##
 
@@ -60,6 +32,8 @@ install_github("leeper/rio@a8d0fca27", lib = tmp)
 # package from a branch
 install_github("kbenoit/quanteda[dev]", lib = tmp)
 ```
+
+Note that branch names, commits, and subdirectories can be placed in essentially any order as long as the proper notation is followed.
 
 
 ## Profiling ##
@@ -92,5 +66,25 @@ Installing ghit
 * DONE (ghit)
    user  system elapsed 
    1.16    0.12    4.36 
+```
+
+## Package Installation ##
+
+[![CRAN Version](http://www.r-pkg.org/badges/version/ghit)](http://cran.r-project.org/package=ghit)
+![Downloads](http://cranlogs.r-pkg.org/badges/ghit)
+[![Travis-CI Build Status](https://travis-ci.org/leeper/ghit.png?branch=master)](https://travis-ci.org/leeper/ghit)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/0nr5r6fycm8jcxm0?svg=true)](https://ci.appveyor.com/project/leeper/ghit)
+[![codecov.io](http://codecov.io/github/leeper/ghit/coverage.svg?branch=master)](http://codecov.io/github/leeper/ghit?branch=master)
+
+The package is available on [CRAN](http://cran.r-project.org/package=ghit) and can be installed directly in R using:
+
+```R
+install.packages("ghit")
+```
+
+The latest development version on GitHub can be installed using itself:
+
+```R
+ghit::install_github("leeper/ghit")
 ```
 

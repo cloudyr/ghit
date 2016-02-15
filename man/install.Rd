@@ -8,7 +8,7 @@ install_github(repo, host = "github.com", credentials = NULL,
                dependencies = c("Depends", "Imports", "Suggests"), ...)
 }
 \arguments{
-    \item{repo}{A character vector naming one or more GitHub repository containing, at its top level, an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a branch (\dQuote{leeper/ghit[dev]}), a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or pull request (\dQuote{leeper/ghit#1}).}
+    \item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a branch (\dQuote{leeper/ghit[dev]}), a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or subdirectory (\dQuote{leeper/ghit/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{leeper/ghit[master]@abc123/R}). Note: Pull requests are recognized but not currently supported (\dQuote{leeper/ghit#1}).}
     \item{host}{A character string naming a host, to enable installation of enterprise-hosted GitHub packages.}
     \item{credentials}{An argument passed to the \code{credentials} argument to \code{\link[git2r]{clone}}. See \code{\link[git2r]{cred_user_pass}} or \code{\link[git2r]{cred_ssh_key}}.}
     \item{build_args}{A character string used to control the package build, passed to \code{R CMD build}.}
@@ -18,18 +18,18 @@ install_github(repo, host = "github.com", credentials = NULL,
     \item{dependencies}{A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).}
     \item{...}{Additional arguments to control installation of package, passed to \code{\link[utils]{install.packages}}.}
 }
-\description{\code{\link{install_github}} allows users to install R packages hosted on GitHub without needing to install or load the heavy dependencies required by devtools. ghit provides a drop-in replacement that provides (almost) identical functionality to \code{devtools::install_github()}, but is also vectorized to allow easy installing of multiple packages.}
-\value{A named list of R package versions installed.}
-\author{Thomas J. Leeper, with some code from Josh O'Brien (\href{http://stackoverflow.com/questions/30223957/elegantly-extract-r-package-dependencies-of-a-package-not-listed-on-cran}{on StackOverflow}).}
+\description{\code{install_github} allows users to install R packages hosted on GitHub without needing to install or load the heavy dependencies required by devtools. ghit provides a drop-in replacement that provides (almost) identical functionality to \code{devtools::install_github()}.}
+\value{A named character vector of R package versions installed.}
+\author{Thomas J. Leeper}
 \examples{
 \dontrun{
 tmp <- file.path(tempdir(), "tmplib")
 dir.create(tmp)
 # install a single package
-install_github("leeper/webuse", lib = tmp)
+install_github("leeper/ghit", lib = tmp)
 
 # install multiple packages
-install_github(c("leeper/webuse", "leeper/crandatapkgs"), lib = tmp)
+install_github(c("leeper/ghit", "leeper/crandatapkgs"), lib = tmp)
 
 # cleanup
 unlink(tmp, recursive = TRUE)

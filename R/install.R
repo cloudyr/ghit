@@ -5,8 +5,6 @@ function(repo, host = "github.com", credentials = NULL,
          dependencies = c("Depends", "Imports", "Suggests"), ...) {
 
     # setup build args
-    #basic_args <- " --no-save --no-environ --no-restore --silent"
-    basic_args <- " --vanilla"
     if (is.null(build_args)) {
         build_args <- ""
     }
@@ -54,13 +52,12 @@ function(repo, host = "github.com", credentials = NULL,
         }
         
         # build package
-        build_and_insert(p$pkgname, d, vers, build_args, basic_args, verbose = verbose)
+        build_and_insert(p$pkgname, d, vers, build_args, verbose = verbose)
         return(p$pkgname)
     })
     
     if (("ghit" %in% to_install) && ("ghit" %in% loadedNamespaces())) {
-        on.exit(unloadNamespace("ghit"), add = TRUE)
-        on.exit(requireNamespace("ghit"), add = TRUE)
+        message("ghit is being reinstalled. Please unloadNamespace('ghit') and reload.")
     }
     
     # install packages from drat and dependencies from CRAN
@@ -73,7 +70,6 @@ function(repo, host = "github.com", credentials = NULL,
                             contriburl = contrib,
                             dependencies = dependencies,
                             verbose = verbose,
-                            INSTALL_opts = basic_args, 
                             quiet = !verbose,
                             ...)
     

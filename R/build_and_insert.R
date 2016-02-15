@@ -1,6 +1,6 @@
-build_and_insert <- function(pkgname, d, ver, build_args = "", basic_args = "", verbose = FALSE) {
+build_and_insert <- function(pkgname, d, ver, build_args = "", verbose = FALSE) {
     
-    arg <- c("CMD build", d, build_args, basic_args)
+    arg <- c("CMD build", d, build_args)
     if (verbose) {
         message(sprintf("Building package %s...", pkgname))
     }
