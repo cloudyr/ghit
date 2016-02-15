@@ -23,10 +23,24 @@ test_that("Install multiple packages", {
 
 test_that("Install from a branch", {
     i4 <- install_github("leeper/ghit[kitten]", lib = tmp)
-    expect_true(length(i3) == 2)
+    expect_true(length(i4) == 1)
     remove.packages("anRpackage", lib = tmp)
 })
 
-#test_that("Install from a ref", {})
-#test_that("Install from a tag", {})
-#test_that("Install from a pull request", {})
+test_that("Install from a commit ref", {
+    i5 <- install_github("leeper/ghit@6d118d08", lib = tmp)
+    expect_true(length(i5) == 1)
+    remove.packages("ghit", lib = tmp)
+})
+
+test_that("Install from a tag", {
+    i6 <- install_github("leeper/ghit@v0.1.1", lib = tmp)
+    expect_true(length(i6) == 1)
+    remove.packages("ghit", lib = tmp)
+})
+
+#test_that("Install from a pull request", {
+    #i7 <- install_github("leeper/ghit#13", lib = tmp)
+    #expect_true(length(i7) == 1)
+    #remove.packages("ghit", lib = tmp)
+#})

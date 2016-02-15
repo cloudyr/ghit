@@ -36,12 +36,12 @@ function(repo, host = "github.com", credentials = NULL,
         if (verbose) {
             message(sprintf("Reading package metadata for '%s'...", x))
         }
-        p$pkgname <- unname(description[1, "Package"])
         description <- read.dcf(file.path(d, "DESCRIPTION"))
+        p$pkgname <- unname(description[1, "Package"])
         vers <- unname(description[1,"Version"])
         if (p$pkgname %in% installed.packages()[, "Package"]) {
-            curr <- as.character(utils::packageVersion(x))
-            com <- compareVersion(vers, curr)
+            curr <- as.character(utils::packageVersion(p$pkgname))
+            com <- utils::compareVersion(vers, curr)
             if (com > 0) {
                 warning(sprintf("Package %s older (%s) than currently installed version (%s).", p$pkgname, vers, curr))
             }

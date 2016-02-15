@@ -27,45 +27,53 @@ checkout_pkg <- function(p, host = "github.com", credentials = NULL, verbose = F
         } else {
             git2r::checkout(gitrepo, branch = "master", create = TRUE, force = TRUE)
         }
-        
-        # checkout commits, tags, or directories
-        if (!is.na(p$ref)) {
-            # commits
-            a <- grep(substring(p$ref, 2, nchar(p$ref)), 
-                      sapply(git2r::commits(gitrepo), methods::slot, "sha"), fixed = TRUE)
-            if (length(a)) {
-                if (verbose) {
-                    message(sprintf("Checking out commit %s for packge %s...", p$ref, p$pkgname))
-                }
-                git2r::checkout(git2r::commits(gitrepo)[[a[1]]], force = TRUE)
-            } else {
-                # tags
-                b <- grep(p$ref, names(git2r::tags(gitrepo)), fixed = TRUE)
-                if (length(b)) {
-                    if (verbose) {
-                        message(sprintf("Checking out tag %s for packge %s...", p$ref, p$pkgname))
-                    }
-                    git2r::checkout(git2r::tags(gitrepo)[[b[1]]], force = TRUE)
-                } else {
-                    stop("Reference (sha or git tag) not found!")
-                }
-            }
-        } else if (!is.na(p$subdir)) {
-            # subdirectory
-            d <- file.path(d, p$subdir)
-            if (verbose) {
-                message(sprintf("Checking out package subdirectory for %s...", p$pkgname))
-            }
-        }
     } else {
         # handle pull request
-        git2r::fetch(gitrepo, name = "github", credentials = credentials)
-        paste0("refs/pull/", p$pull)
+        stop("Pull requests not yet implemented!")
+        if (verbose) {
+            message(sprintf("Extracting pull request %s for %s...", p$pull, p$pkgname))
+        }
+        rem <- git2r::remote_ls("github", gitrepo)
+        w <- which(grepl(paste0("refs/pull/",p$pull,"/head"), names(rem), fixed = TRUE))
+        if (!length(w)) {
+            stop(sprintf("Pull request %s not found for %s!", p$pull, p$pkgname))
+        }
         if (verbose) {
             message(sprintf("Checking out pull request %s for %s...", p$pull, p$pkgname))
         }
-        stop("Pull requests are not  yetimplemented!")
-        #git2r::checkout(gitrepo, branch = "GHITBRANCH", create = TRUE, force = TRUE)
+        #a <- grep(unname(rem[5]), SOMEWHERE, fixed = TRUE)
+        #git2r::checkout(git2r::commits(gitrepo)[[a[1]]], force = TRUE)
+
+    }
+    # checkout commits or tags
+    if (!is.na(p$ref)) {
+        # commits
+        a <- grep(substring(p$ref, 2, nchar(p$ref)), 
+                  sapply(git2r::commits(gitrepo), function(x) attributes(x)[["sha"]]), fixed = TRUE)
+        if (length(a)) {
+            if (verbose) {
+                message(sprintf("Checking out commit %s for packge %s...", p$ref, p$pkgname))
+            }
+            git2r::checkout(git2r::commits(gitrepo)[[a[1]]], force = TRUE)
+        } else {
+            # tags
+            b <- grep(p$ref, names(git2r::tags(gitrepo)), fixed = TRUE)
+            if (length(b)) {
+                if (verbose) {
+                    message(sprintf("Checking out tag %s for packge %s...", p$ref, p$pkgname))
+                }
+                git2r::checkout(git2r::tags(gitrepo)[[b[1]]], force = TRUE)
+            } else {
+                stop("Reference (sha or git tag) not found!")
+            }
+        }
+    }
+    # checkout directories
+    if (!is.na(p$subdir)) {
+        if (verbose) {
+            message(sprintf("Checking out package subdirectory for %s...", p$pkgname))
+        }
+        d <- file.path(d, p$subdir)
     }
     return(d)
 }

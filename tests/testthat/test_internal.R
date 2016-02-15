@@ -85,18 +85,19 @@ test_that("checkout release", {
 })
 
 context("Pull requests")
-x6 <- ghit:::parse_reponame("leeper/ghit#7")
+x6 <- ghit:::parse_reponame("leeper/ghit#13")
 test_that("Parse reponame, pull request", {
     expect_true(is.list(x6))
     expect_true(x6$user == "leeper")
     expect_true(x6$pkgname == "ghit")
     expect_true(is.na(x6$ref))
     expect_true(is.na(x6$branch))
-    expect_true(x6$pull == "7")
+    expect_true(x6$pull == "13")
     expect_true(is.na(x6$subdir))
 })
 test_that("checkout pull request", {
     #expect_true(is.character(ghit:::checkout_pkg(x6, "github.com")))
+    expect_error(ghit:::checkout_pkg(x6, "github.com"))
 })
 
 
