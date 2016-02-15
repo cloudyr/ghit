@@ -36,8 +36,16 @@ function(repo, host = "github.com", credentials = NULL,
         if (verbose) {
             message(sprintf("Reading package metadata for '%s'...", x))
         }
-        description <- read.dcf(file.path(d, "DESCRIPTION"))
         p$pkgname <- unname(description[1, "Package"])
+        description <- read.dcf(file.path(d, "DESCRIPTION"))
+        vers <- unname(description[1,"Version"])
+        if (p$pkgname %in% installed.packages()[, "Package"]) {
+            curr <- as.character(utils::packageVersion(x))
+            com <- compareVersion(vers, curr)
+            if (com > 0) {
+                warning(sprintf("Package %s older (%s) than currently installed version (%s).", p$pkgname, vers, curr))
+            }
+        }        
         
         # check for compiled code
         if (file.exists(file.path(d, "src"))) {
@@ -46,7 +54,7 @@ function(repo, host = "github.com", credentials = NULL,
         }
         
         # build package
-        build_and_insert(p$pkgname, d, unname(description[1,"Version"]), build_args, basic_args, verbose = verbose)
+        build_and_insert(p$pkgname, d, vers, build_args, basic_args, verbose = verbose)
         return(p$pkgname)
     })
     
@@ -69,6 +77,13 @@ function(repo, host = "github.com", credentials = NULL,
                             quiet = !verbose,
                             ...)
     
-    v_out <- sapply(to_install, function(x) as.character(utils::packageVersion(x)))
+    opts <- list(...)
+    v_out <- sapply(to_install, function(x) {
+        if ("lib" %in% names(opts)) {
+            as.character(utils::packageVersion(x, lib.loc = c(.libPaths(), opts$lib)))
+        } else {
+            as.character(utils::packageVersion(x))
+        }
+    })
     return(v_out)
 }
