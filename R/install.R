@@ -40,7 +40,7 @@ function(repo, host = "github.com", credentials = NULL,
         if (p$pkgname %in% installed.packages()[, "Package"]) {
             curr <- as.character(utils::packageVersion(p$pkgname))
             com <- utils::compareVersion(vers, curr)
-            if (com > 0) {
+            if (com < 0) {
                 warning(sprintf("Package %s older (%s) than currently installed version (%s).", p$pkgname, vers, curr))
             }
         }        

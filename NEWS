@@ -1,3 +1,7 @@
+# CHANGES TO v0.2.1 #
+
+ * Fixed a reference to `compareVersion()` that triggered a warning at the opposite times from expected.
+
 # CHANGES TO v0.2.0 #
 
  * CRAN Release.
