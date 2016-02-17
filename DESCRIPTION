@@ -2,11 +2,11 @@ Package: ghit
 Type: Package
 Title: Lightweight GitHub Package Installer
 Version: 0.2.2
-Date: 2016-02-15
+Date: 2016-02-17
 Maintainer: Thomas J. Leeper <thosjleeper@gmail.com>
 Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"), email = "thosjleeper@gmail.com"))
 Description: A lightweight, vectorized drop-in replacement for 'devtools::install_github()' that uses native git and R methods to clone and install a package from GitHub.
-Imports: utils, tools, git2r
+Imports: utils, tools, git2r (>=0.13.2)
 Suggests: testthat
 License: MIT + file LICENSE
 URL: https://github.com/leeper/ghit

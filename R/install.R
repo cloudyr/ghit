@@ -3,6 +3,57 @@ function(repo, host = "github.com", credentials = NULL,
          build_args = NULL, build_vignettes = TRUE, verbose = FALSE, 
          repos = getOption("repos", c(CRAN = "http://cloud.r-project.org")),
          dependencies = c("Depends", "Imports", "Suggests"), ...) {
+    
+    install(repo = repo, 
+            host = host, 
+            credentials = credentials, 
+            build_args = build_args, 
+            build_vignettes = build_vignettes, 
+            verbose = verbose, 
+            repos = repos,
+            dependencies = dependencies, 
+            ...)
+}
+
+install_bitbucket <- 
+function(repo, host = "bitbucket.org", credentials = NULL, 
+         build_args = NULL, build_vignettes = TRUE, verbose = FALSE, 
+         repos = getOption("repos", c(CRAN = "http://cloud.r-project.org")),
+         dependencies = c("Depends", "Imports", "Suggests"), ...) {
+    
+    u <- strsplit(repo, "/", fixed = TRUE)[[1]][1]
+    install(repo = repo, 
+            host = paste0(u, "@", host), 
+            credentials = credentials, 
+            build_args = build_args, 
+            build_vignettes = build_vignettes, 
+            verbose = verbose, 
+            repos = repos,
+            dependencies = dependencies, 
+            ...)
+}
+
+install_git <- 
+function(repo, host, credentials = NULL, 
+         build_args = NULL, build_vignettes = TRUE, verbose = FALSE, 
+         repos = getOption("repos", c(CRAN = "http://cloud.r-project.org")),
+         dependencies = c("Depends", "Imports", "Suggests"), ...) {
+    
+    install(repo = repo, 
+            host = paste0(u, "@", host), 
+            credentials = credentials, 
+            build_args = build_args, 
+            build_vignettes = build_vignettes, 
+            verbose = verbose, 
+            repos = repos,
+            dependencies = dependencies, 
+            ...)
+}
+
+install <- 
+function(repo, host, credentials, build_args, 
+         build_vignettes = TRUE, verbose = FALSE, 
+         repos, dependencies = c("Depends", "Imports", "Suggests"), ...) {
 
     # setup build args
     if (is.null(build_args)) {
