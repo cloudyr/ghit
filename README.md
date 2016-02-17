@@ -29,6 +29,9 @@ install_github("klutometis/roxygen", lib = tmp)
 # package at a given commit
 install_github("leeper/rio@a8d0fca27", lib = tmp)
 
+# package from a pull request
+install_github("leeper/ghit#13", lib = tmp)
+
 # package from a branch
 install_github("kbenoit/quanteda[dev]", lib = tmp)
 ```

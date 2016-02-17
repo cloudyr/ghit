@@ -1,7 +1,7 @@
 install_github <- 
 function(repo, host = "github.com", credentials = NULL, 
          build_args = NULL, build_vignettes = TRUE, verbose = FALSE, 
-         repos = getOption("repos", c(CRAN = "http://cloud.r-project.org")),
+         repos = getOption("repos", c(CRAN = "https://cloud.r-project.org")),
          dependencies = c("Depends", "Imports", "Suggests"), ...) {
 
     # setup build args
@@ -45,27 +45,24 @@ function(repo, host = "github.com", credentials = NULL,
             }
         }        
         
-        # check for compiled code
-        if (file.exists(file.path(d, "src"))) {
-            # do a check for build tools?
-            # could modify from devtools::check_build_tools()
-        }
-        
-        # build package
+        # build package and insert into drat
         build_and_insert(p$pkgname, d, vers, build_args, verbose = verbose)
         return(p$pkgname)
     })
     
-    if (("ghit" %in% to_install) && ("ghit" %in% loadedNamespaces())) {
-        message("ghit is being reinstalled. Please unloadNamespace('ghit') and reload.")
-    }
-    
     # install packages from drat and dependencies from CRAN
+    loaded <- to_install[to_install %in% loadedNamespaces()]
+    if (length(loaded)) {
+        if (verbose) {
+            message(sprintf("Unloading packages %s...", paste0(loaded, collapse = ", ")))
+        }
+        try(sapply(loaded, unloadNamespace))
+    }
     if (verbose) {
         message(sprintf("Installing packages%s...", 
                         if (length(dependencies)) paste0(" and ", paste(dependencies, collapse = ", ")) else ""))
     }
-    contrib <- file.path(c("TemporaryRepo" = paste0("file:", repodir), repos), "src", "contrib")
+    contrib <- file.path(c("TemporaryRepo" = paste0("file:///", repodir), repos), "src", "contrib")
     utils::install.packages(to_install, type = "source", 
                             contriburl = contrib,
                             dependencies = dependencies,
@@ -81,5 +78,12 @@ function(repo, host = "github.com", credentials = NULL,
             as.character(utils::packageVersion(x))
         }
     })
+    if (length(loaded)) {
+        if (verbose) {
+            message(sprintf("reloading packages %s...", paste0(loaded, collapse = ", ")))
+        }
+        sapply(loaded, requireNamespace)
+    }
+    
     return(v_out)
 }

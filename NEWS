@@ -1,3 +1,8 @@
+# CHANGES TO v0.2.3 #
+
+ * Added support for installing pull requests thanks to an update to git2r. (#10)
+ * Packages with a loaded namespace are now unloaded before installation and reloaded thereafter.
+
 # CHANGES TO v0.2.1 #
 
  * Fixed a reference to `compareVersion()` that triggered a warning at the opposite times from expected.

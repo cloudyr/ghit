@@ -4,11 +4,11 @@
 \usage{
 install_github(repo, host = "github.com", credentials = NULL, 
                build_args = NULL, build_vignettes = TRUE, verbose = FALSE, 
-               repos = getOption("repos", c(CRAN = "http://cloud.r-project.org")),
+               repos = getOption("repos", c(CRAN = "https://cloud.r-project.org")),
                dependencies = c("Depends", "Imports", "Suggests"), ...)
 }
 \arguments{
-    \item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a branch (\dQuote{leeper/ghit[dev]}), a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or subdirectory (\dQuote{leeper/ghit/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{leeper/ghit[master]@abc123/R}). Note: Pull requests are recognized but not currently supported (\dQuote{leeper/ghit#1}).}
+    \item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a branch (\dQuote{leeper/ghit[dev]}), a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or subdirectory (\dQuote{leeper/ghit/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{leeper/ghit[master]@abc123/R}).}
     \item{host}{A character string naming a host, to enable installation of enterprise-hosted GitHub packages.}
     \item{credentials}{An argument passed to the \code{credentials} argument to \code{\link[git2r]{clone}}. See \code{\link[git2r]{cred_user_pass}} or \code{\link[git2r]{cred_ssh_key}}.}
     \item{build_args}{A character string used to control the package build, passed to \code{R CMD build}.}

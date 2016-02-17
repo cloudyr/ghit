@@ -13,11 +13,6 @@ test_that("Install a single package w/o vignettes", {
     expect_true(length(i2) == 1)
 })
 
-test_that("Install multiple packages", {
-    i3 <- install_github(c("leeper/ghit", "leeper/crandatapkgs"), lib = tmp)
-    expect_true(length(i3) == 2)
-})
-
 test_that("Install from a branch", {
     i4 <- install_github("leeper/ghit[kitten]", lib = tmp)
     expect_true(length(i4) == 1)
@@ -33,11 +28,11 @@ test_that("Install from a tag", {
     expect_true(length(i6) == 1)
 })
 
-#test_that("Install from a pull request", {
-    #i7 <- install_github("leeper/ghit#13", lib = tmp)
-    #expect_true(length(i7) == 1)
-    #remove.packages("ghit", lib = tmp)
-#})
+test_that("Install from a pull request", {
+    i7 <- install_github("leeper/ghit#13", lib = tmp)
+    expect_true(length(i7) == 1)
+    remove.packages("ghit", lib = tmp)
+})
 
 # cleanup
 remove.packages(c("ghit", "crandatapkgs", "anRpackage"), lib = tmp)

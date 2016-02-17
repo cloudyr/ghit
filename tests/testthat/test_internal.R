@@ -96,8 +96,7 @@ test_that("Parse reponame, pull request", {
     expect_true(is.na(x6$subdir))
 })
 test_that("checkout pull request", {
-    #expect_true(is.character(ghit:::checkout_pkg(x6, "github.com")))
-    expect_error(ghit:::checkout_pkg(x6, "github.com"))
+    expect_true(is.character(ghit:::checkout_pkg(x6, "github.com")))
 })
 
 
