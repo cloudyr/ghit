@@ -29,6 +29,9 @@ checkout_pkg <- function(p, host = "github.com", credentials = NULL, verbose = F
         }
     } else {
         # handle pull request
+        if (packageVersion("git2r") < "0.13.1.9000") {
+            stop("Checkout of pull requests requires git2r version >= 0.13.1.9000")
+        }
         if (verbose) {
             message(sprintf("Finding pull request #%s for package %s...", p$pull, p$pkgname))
         }

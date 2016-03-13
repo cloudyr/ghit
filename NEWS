@@ -1,6 +1,6 @@
 # CHANGES TO v0.2.3 #
 
- * Added support for installing pull requests thanks to an update to git2r. (#10)
+ * Added support for installing pull requests thanks to an update to git2r. This will only work with the development version of git2r (available from GitHub). (#10)
  * Packages with a loaded namespace are now unloaded before installation and reloaded thereafter.
 
 # CHANGES TO v0.2.1 #
