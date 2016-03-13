@@ -37,4 +37,5 @@ test_that("Install from a pull request", {
 })
 
 # cleanup
-remove.packages(c("ghit", "crandatapkgs", "anRpackage"), lib = tmp)
+remove.packages(c("ghit", "anRpackage"), lib = tmp)
+unlink(tmp)

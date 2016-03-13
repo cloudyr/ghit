@@ -1,3 +1,7 @@
+# CHANGES TO v0.2.5 #
+
+ * CRAN release.
+
 # CHANGES TO v0.2.3 #
 
  * Added support for installing pull requests thanks to an update to git2r. This will only work with the development version of git2r (available from GitHub). (#10)
