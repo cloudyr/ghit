@@ -4,6 +4,8 @@ function(repo, host = "github.com", credentials = NULL,
          repos = getOption("repos", c(CRAN = "https://cloud.r-project.org")),
          dependencies = c("Depends", "Imports", "Suggests"), ...) {
 
+    opts <- list(...)
+    
     # setup build args
     if (is.null(build_args)) {
         build_args <- ""
@@ -37,13 +39,25 @@ function(repo, host = "github.com", credentials = NULL,
         description <- read.dcf(file.path(d, "DESCRIPTION"))
         p$pkgname <- unname(description[1, "Package"])
         vers <- unname(description[1,"Version"])
-        if (p$pkgname %in% installed.packages()[, "Package"]) {
-            curr <- as.character(utils::packageVersion(p$pkgname))
+        if ("lib" %in% names(opts)) {
+            if (p$pkgname %in% installed.packages(lib.loc = c(.libPaths(), opts$lib))[, "Package"]) {
+                curr <- try(as.character(utils::packageVersion(p$pkgname, lib.loc = c(.libPaths(), opts$lib))), silent = TRUE)
+            } else {
+                curr <- NA_character_
+            }
+        } else {
+            if (p$pkgname %in% installed.packages()[, "Package"]) {
+                curr <- try(as.character(utils::packageVersion(p$pkgname)), silent = TRUE)
+            } else {
+                curr <- NA_character_
+            }
+        }
+        if (!inherits(curr, "try-error") && !is.na(curr)) {
             com <- utils::compareVersion(vers, curr)
             if (com < 0) {
                 warning(sprintf("Package %s older (%s) than currently installed version (%s).", p$pkgname, vers, curr))
             }
-        }        
+        }
         
         # build package and insert into drat
         build_and_insert(p$pkgname, d, vers, build_args, verbose = verbose)
@@ -70,7 +84,6 @@ function(repo, host = "github.com", credentials = NULL,
                             quiet = !verbose,
                             ...)
     
-    opts <- list(...)
     v_out <- sapply(to_install, function(x) {
         if ("lib" %in% names(opts)) {
             z <- try(as.character(utils::packageVersion(x, lib.loc = c(.libPaths(), opts$lib))), silent = TRUE)
