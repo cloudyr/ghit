@@ -13,7 +13,7 @@ build_and_insert <- function(pkgname, d, ver, build_args = "", verbose = FALSE) 
     on.exit(unlink(tarball), add = TRUE)
     
     pkgdir <- file.path(tempdir(), "ghitdrat", "src", "contrib")
-    if (!dir.exists(pkgdir)) {
+    if (((getRversion() >= "3.2.0") && !dir.exists(pkgdir)) || (!file.exists(pkgdir))) {
         suppressWarnings(dir.create(file.path(tempdir())))
         suppressWarnings(dir.create(file.path(tempdir(), "ghitdrat")))
         suppressWarnings(dir.create(file.path(tempdir(), "ghitdrat", "src")))
