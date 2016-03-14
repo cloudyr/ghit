@@ -32,15 +32,16 @@ test_that("Install from a pull request", {
     if (packageVersion("git2r") > "0.13.1.9000") {
         i7 <- suppressWarnings(install_github("leeper/ghit#13", lib = tmp))
         expect_true(length(i7) == 1)
-        remove.packages("ghit", lib = tmp)
+    } else {
+        expect_true(TRUE)
     }
 })
 
 # cleanup
-if ("ghit" %in% installed.packages(lib.loc = tmp)) {
+if ("ghit" %in% installed.packages(lib.loc = tmp)[, "Package"]) {
     remove.packages("ghit", lib = tmp)
 }
-if ("anRpackage" %in% installed.packages(lib = tmp)) {
+if ("anRpackage" %in% installed.packages(lib = tmp)[, "Package"]) {
     remove.packages("anRpackage", lib = tmp)
 }
 unlink(tmp)
