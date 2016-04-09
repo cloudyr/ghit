@@ -8,6 +8,11 @@ test_that("Install a single package", {
     expect_true(length(i1) == 1)
 })
 
+test_that("Install a single package, removing old install", {
+    i1 <- suppressWarnings(install_github("leeper/ghit", lib = tmp, uninstall = TRUE, verbose = TRUE))
+    expect_true(length(i1) == 1)
+})
+
 test_that("Install a single package w/o vignettes", {
     i2 <- suppressWarnings(install_github("leeper/ghit", build_vignettes = FALSE, lib = tmp))
     expect_true(length(i2) == 1)

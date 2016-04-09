@@ -1,6 +1,7 @@
 install_github <- 
 function(repo, host = "github.com", credentials = NULL, 
-         build_args = NULL, build_vignettes = TRUE, verbose = FALSE, 
+         build_args = NULL, build_vignettes = TRUE, uninstall = FALSE, 
+         verbose = FALSE, 
          repos = getOption("repos", c(CRAN = "https://cloud.r-project.org")),
          dependencies = c("Depends", "Imports", "Suggests"), ...) {
 
@@ -17,25 +18,17 @@ function(repo, host = "github.com", credentials = NULL,
     }
     
     # setup drat
-    repodir <- file.path(tempdir(), "ghitdrat")
-    suppressWarnings(dir.create(repodir))
-    suppressWarnings(dir.create(file.path(repodir, "src")))
-    suppressWarnings(dir.create(file.path(repodir, "src", "contrib")))
-    on.exit(unlink(repodir), add = TRUE)
+    repodir <- setup_repodir()
     
     # download and build packages
     to_install <- sapply(unique(repo), function(x) {
         # parse reponame
-        if (verbose) {
-            message(sprintf("Parsing reponame for '%s'...", x))
-        }
+        ghitmsg(verbose, message(sprintf("Parsing reponame for '%s'...", x)))
         p <- parse_reponame(repo = x)
         d <- checkout_pkg(p, host = host, credentials = credentials, verbose = verbose)
         on.exit(unlink(d), add = TRUE)
         
-        if (verbose) {
-            message(sprintf("Reading package metadata for '%s'...", x))
-        }
+        ghitmsg(verbose, message(sprintf("Reading package metadata for '%s'...", x)))
         description <- read.dcf(file.path(d, "DESCRIPTION"))
         p$pkgname <- unname(description[1, "Package"])
         vers <- unname(description[1,"Version"])
@@ -54,9 +47,9 @@ function(repo, host = "github.com", credentials = NULL,
         }
         if (!inherits(curr, "try-error") && !is.na(curr)) {
             com <- utils::compareVersion(vers, curr)
-            if (com < 0) {
+            ghitmsg(com < 0, 
                 warning(sprintf("Package %s older (%s) than currently installed version (%s).", p$pkgname, vers, curr))
-            }
+            )
         }
         
         # build package and insert into drat
@@ -64,18 +57,21 @@ function(repo, host = "github.com", credentials = NULL,
         return(p$pkgname)
     })
     
+    # conditionally uninstall old versions
+    if (isTRUE(uninstall)) {
+        uninstall_old(to_install, lib = opts$lib, verbose = verbose)
+    }
+    
     # install packages from drat and dependencies from CRAN
     loaded <- to_install[to_install %in% loadedNamespaces()]
     if (length(loaded)) {
-        if (verbose) {
-            message(sprintf("Unloading packages %s...", paste0(loaded, collapse = ", ")))
-        }
+        ghitmsg(verbose, message(sprintf("Unloading packages %s...", paste0(loaded, collapse = ", "))))
         try(sapply(loaded, unloadNamespace))
     }
-    if (verbose) {
-        message(sprintf("Installing packages%s...", 
-                        if (length(dependencies)) paste0(" and ", paste(dependencies, collapse = ", ")) else ""))
-    }
+    ghitmsg(verbose, 
+            message(sprintf("Installing packages%s...", 
+                    if (length(dependencies)) paste0(" and ", paste(dependencies, collapse = ", ")) else ""))
+           )
     contrib <- file.path(c("TemporaryRepo" = paste0("file:///", repodir), repos), "src", "contrib")
     utils::install.packages(to_install, type = "source", 
                             contriburl = contrib,
@@ -93,11 +89,39 @@ function(repo, host = "github.com", credentials = NULL,
         if (inherits(z, "try-error")) NA_character_ else z
     })
     if (length(loaded)) {
-        if (verbose) {
-            message(sprintf("reloading packages %s...", paste0(loaded, collapse = ", ")))
-        }
+        ghitmsg(verbose, message(sprintf("reloading packages %s...", paste0(loaded, collapse = ", "))) )
         sapply(loaded, requireNamespace)
     }
     
     return(v_out)
+}
+
+setup_repodir <- function() {
+    repodir <- file.path(tempdir(), "ghitdrat")
+    suppressWarnings(dir.create(repodir))
+    suppressWarnings(dir.create(file.path(repodir, "src")))
+    suppressWarnings(dir.create(file.path(repodir, "src", "contrib")))
+    on.exit(unlink(repodir), add = TRUE)
+    return(repodir)
+}
+
+uninstall_old <- function(pkgs, lib, verbose = FALSE) {    
+    if (!is.null(lib)) {
+        if (verbose) {
+            un <- try(utils::remove.packages(pkgs, lib = lib), silent = TRUE)
+        } else {
+            un <- suppressMessages(try(utils::remove.packages(pkgs, lib = lib), silent = TRUE))
+        }
+    } else {
+        un <- try(utils::remove.packages(pkgs), silent = TRUE)
+        if (verbose) {
+            
+        } else {
+            un <- suppressMessages(try(utils::remove.packages(pkgs), silent = TRUE))
+        }
+    }
+    if (inherits(un, "try-error")) {
+        ghitmsg(verbose, paste0("Note: ", message(attributes(un)$condition$message)))
+    }
+    invisible(NULL)
 }
