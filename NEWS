@@ -1,3 +1,7 @@
+# CHANGES TO v0.2.7 #
+
+ * **ghit** is now hosted by the cloudyr project.
+
 # CHANGES TO v0.2.6 #
 
  * `install_github()` now installs devtools-style metadata into the DESCRIPTION file to faciliate compatibility with `devtools::session_info()` printing. (#16)

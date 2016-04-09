@@ -28,10 +28,10 @@ install_github(repo, host = "github.com", credentials = NULL,
 tmp <- file.path(tempdir(), "tmplib")
 dir.create(tmp)
 # install a single package
-install_github("leeper/ghit", lib = tmp)
+install_github("cloudyr/ghit", lib = tmp)
 
 # install multiple packages
-install_github(c("leeper/ghit", "leeper/crandatapkgs"), lib = tmp)
+install_github(c("cloudyr/ghit", "leeper/crandatapkgs"), lib = tmp)
 
 # cleanup
 unlink(tmp, recursive = TRUE)
