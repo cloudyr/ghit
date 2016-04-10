@@ -1,5 +1,5 @@
 add_metadata <- function(pkgdir, p, verbose = FALSE) {
-    ghitmsg(verbose, message("Adding metadata to DESCRIPTION for package %s...", p$pkgname))
+    ghitmsg(verbose, message(sprintf("Adding metadata to DESCRIPTION for package %s...", p$pkgname)))
     desc <- file.path(pkgdir, "DESCRIPTION")
     dcf <- read.dcf(desc)
     meta <- c("github", p$user, p$pkgname, p$sha1)

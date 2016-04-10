@@ -1,3 +1,7 @@
+# CHANGES TO v0.2.8 #
+
+ * Fixed a small bug in printing the package name when `verbose = TRUE`.
+
 # CHANGES TO v0.2.7 #
 
  * **ghit** is now hosted by the cloudyr project.
