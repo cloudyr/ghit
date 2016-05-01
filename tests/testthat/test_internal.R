@@ -1,8 +1,8 @@
 context("Test internals: parse, checkout, build")
-x1 <- ghit:::parse_reponame("leeper/ghit")
+x1 <- ghit:::parse_reponame("cloudyr/ghit")
 test_that("Parse reponame", {
     expect_true(is.list(x1))
-    expect_true(x1$user == "leeper")
+    expect_true(x1$user == "cloudyr")
     expect_true(x1$pkgname == "ghit")
     expect_true(is.na(x1$ref))
     expect_true(is.na(x1$branch))
@@ -25,10 +25,10 @@ test_that("build package and insert", {
 })
 
 context("Subdirectories")
-x2 <- ghit:::parse_reponame("leeper/ghit/R")
+x2 <- ghit:::parse_reponame("cloudyr/ghit/R")
 test_that("Parse reponame, subdirectory", {
     expect_true(is.list(x2))
-    expect_true(x2$user == "leeper")
+    expect_true(x2$user == "cloudyr")
     expect_true(x2$pkgname == "ghit")
     expect_true(is.na(x2$ref))
     expect_true(is.na(x2$branch))
@@ -40,10 +40,10 @@ test_that("checkout package subdirectory", {
 })
 
 context("Commits")
-x3 <- ghit:::parse_reponame("leeper/ghit[kitten]")
+x3 <- ghit:::parse_reponame("cloudyr/ghit[kitten]")
 test_that("Parse reponame, branch", {
     expect_true(is.list(x3))
-    expect_true(x3$user == "leeper")
+    expect_true(x3$user == "cloudyr")
     expect_true(x3$pkgname == "ghit")
     expect_true(is.na(x3$ref))
     expect_true(x3$branch == "kitten")
@@ -55,10 +55,10 @@ test_that("checkout branch", {
 })
 
 context("Commits")
-x4 <- ghit:::parse_reponame("leeper/ghit@6d118d08")
+x4 <- ghit:::parse_reponame("cloudyr/ghit@6d118d08")
 test_that("Parse reponame, ref", {
     expect_true(is.list(x4))
-    expect_true(x4$user == "leeper")
+    expect_true(x4$user == "cloudyr")
     expect_true(x4$pkgname == "ghit")
     expect_true(x4$ref == "6d118d08")
     expect_true(is.na(x4$branch))
@@ -70,10 +70,10 @@ test_that("checkout commit", {
 })
 
 context("Releases")
-x5 <- ghit:::parse_reponame("leeper/ghit@v0.1.1")
+x5 <- ghit:::parse_reponame("cloudyr/ghit@v0.1.1")
 test_that("Parse reponame, release", {
     expect_true(is.list(x5))
-    expect_true(x5$user == "leeper")
+    expect_true(x5$user == "cloudyr")
     expect_true(x5$pkgname == "ghit")
     expect_true(x5$ref == "v0.1.1")
     expect_true(is.na(x5$branch))
@@ -85,10 +85,10 @@ test_that("checkout release", {
 })
 
 context("Pull requests")
-x6 <- ghit:::parse_reponame("leeper/ghit#13")
+x6 <- ghit:::parse_reponame("cloudyr/ghit#13")
 test_that("Parse reponame, pull request", {
     expect_true(is.list(x6))
-    expect_true(x6$user == "leeper")
+    expect_true(x6$user == "cloudyr")
     expect_true(x6$pkgname == "ghit")
     expect_true(is.na(x6$ref))
     expect_true(is.na(x6$branch))
@@ -96,13 +96,12 @@ test_that("Parse reponame, pull request", {
     expect_true(is.na(x6$subdir))
 })
 test_that("checkout pull request", {
-    #expect_true(is.character(ghit:::checkout_pkg(x6, "github.com")))
-    expect_error(ghit:::checkout_pkg(x6, "github.com"))
+    expect_true(is.character(ghit:::checkout_pkg(x6, "github.com")))
 })
 
 
 test_that("error on checkout fake branch", {
-    p <- ghit:::parse_reponame("leeper/ghit[fakebranch]")
+    p <- ghit:::parse_reponame("cloudyr/ghit[fakebranch]")
     expect_error(ghit:::checkout_pkg(p, "github.com"))
 })
 
