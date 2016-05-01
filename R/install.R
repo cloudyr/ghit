@@ -25,7 +25,7 @@ function(repo, host = "github.com", credentials = NULL,
         # parse reponame
         ghitmsg(verbose, message(sprintf("Parsing reponame for '%s'...", x)))
         p <- parse_reponame(repo = x)
-        d <- checkout_pkg(p, host = host, credentials = credentials, verbose = verbose)
+        d <- checkout_github(p, host = host, credentials = credentials, verbose = verbose)
         on.exit(unlink(d), add = TRUE)
         
         ghitmsg(verbose, message(sprintf("Reading package metadata for '%s'...", x)))

@@ -1,4 +1,4 @@
-checkout_pkg <- function(p, host = "github.com", credentials = NULL, verbose = FALSE) {
+checkout_github <- function(p, host = "github.com", credentials = NULL, verbose = FALSE) {
     ghitmsg(verbose, message(sprintf("Creating local git repository for %s...", p$pkgname)) )
     d <- tempfile(pattern = p$pkgname)
     dir.create(d)
