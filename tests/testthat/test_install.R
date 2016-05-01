@@ -11,26 +11,33 @@ test_that("Install a single package", {
 test_that("Install a single package, removing old install", {
     i1 <- suppressWarnings(install_github("cloudyr/ghit", lib = tmp, uninstall = TRUE, verbose = TRUE))
     expect_true(length(i1) == 1)
+    remove.packages("ghit", lib = tmp)
 })
 
 test_that("Install a single package w/o vignettes", {
     i2 <- suppressWarnings(install_github("cloudyr/ghit", build_vignettes = FALSE, lib = tmp))
     expect_true(length(i2) == 1)
+    remove.packages("ghit", lib = tmp)
 })
 
 test_that("Install from a branch", {
     i4 <- install_github("cloudyr/ghit[kitten]", lib = tmp)
     expect_true(length(i4) == 1)
+    if ("anRpackage" %in% installed.packages(lib = tmp)[, "Package"]) {
+        remove.packages("anRpackage", lib = tmp)
+    }
 })
 
 test_that("Install from a commit ref", {
     i5 <- suppressWarnings(install_github("cloudyr/ghit@6d118d08", lib = tmp))
     expect_true(length(i5) == 1)
+    remove.packages("ghit", lib = tmp)
 })
 
 test_that("Install from a tag", {
     i6 <- suppressWarnings(install_github("cloudyr/ghit@v0.1.1", lib = tmp))
     expect_true(length(i6) == 1)
+    remove.packages("ghit", lib = tmp)
 })
 
 test_that("Install from a pull request", {
@@ -40,13 +47,11 @@ test_that("Install from a pull request", {
     } else {
         expect_true(TRUE)
     }
+    remove.packages("ghit", lib = tmp)
 })
 
 # cleanup
 if ("ghit" %in% installed.packages(lib.loc = tmp)[, "Package"]) {
     remove.packages("ghit", lib = tmp)
-}
-if ("anRpackage" %in% installed.packages(lib = tmp)[, "Package"]) {
-    remove.packages("anRpackage", lib = tmp)
 }
 unlink(tmp)

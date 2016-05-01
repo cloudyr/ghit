@@ -104,5 +104,3 @@ test_that("error on checkout fake branch", {
     p <- ghit:::parse_reponame("cloudyr/ghit[fakebranch]")
     expect_error(ghit:::checkout_github(p, "github.com"))
 })
-
-
