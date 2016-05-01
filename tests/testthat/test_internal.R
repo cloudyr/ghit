@@ -9,8 +9,8 @@ test_that("Parse reponame", {
     expect_true(is.na(x1$pull))
     expect_true(is.na(x1$subdir))
 })
-chk1 <- ghit:::checkout_pkg(x1, "github.com")
-chk2 <- ghit:::checkout_pkg(x1, "github.com", verbose = TRUE)
+chk1 <- ghit:::checkout_github(x1, "github.com")
+chk2 <- ghit:::checkout_github(x1, "github.com", verbose = TRUE)
 test_that("checkout package", {
     expect_true(is.character(chk1))
     expect_true(is.character(chk2))
@@ -36,7 +36,7 @@ test_that("Parse reponame, subdirectory", {
     expect_true(x2$subdir == "R")
 })
 test_that("checkout package subdirectory", {
-    expect_true(is.character(ghit:::checkout_pkg(x2, "github.com")))
+    expect_true(is.character(ghit:::checkout_github(x2, "github.com")))
 })
 
 context("Commits")
@@ -51,7 +51,7 @@ test_that("Parse reponame, branch", {
     expect_true(is.na(x3$subdir))
 })
 test_that("checkout branch", {
-    expect_true(is.character(ghit:::checkout_pkg(x3, "github.com")))
+    expect_true(is.character(ghit:::checkout_github(x3, "github.com")))
 })
 
 context("Commits")
@@ -66,7 +66,7 @@ test_that("Parse reponame, ref", {
     expect_true(is.na(x4$subdir))
 })
 test_that("checkout commit", {
-    expect_true(is.character(ghit:::checkout_pkg(x4, "github.com")))
+    expect_true(is.character(ghit:::checkout_github(x4, "github.com")))
 })
 
 context("Releases")
@@ -81,7 +81,7 @@ test_that("Parse reponame, release", {
     expect_true(is.na(x5$subdir))
 })
 test_that("checkout release", {
-    expect_true(is.character(ghit:::checkout_pkg(x5, "github.com")))
+    expect_true(is.character(ghit:::checkout_github(x5, "github.com")))
 })
 
 context("Pull requests")
@@ -96,13 +96,13 @@ test_that("Parse reponame, pull request", {
     expect_true(is.na(x6$subdir))
 })
 test_that("checkout pull request", {
-    expect_true(is.character(ghit:::checkout_pkg(x6, "github.com")))
+    expect_true(is.character(ghit:::checkout_github(x6, "github.com")))
 })
 
 
 test_that("error on checkout fake branch", {
     p <- ghit:::parse_reponame("cloudyr/ghit[fakebranch]")
-    expect_error(ghit:::checkout_pkg(p, "github.com"))
+    expect_error(ghit:::checkout_github(p, "github.com"))
 })
 
 
