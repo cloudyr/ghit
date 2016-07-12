@@ -1,8 +1,8 @@
-.git
-.gitignore
-.Rbuildignore
-.travis.yml
-appveyor.yml
-README.Rmd
-CONTRIBUTING.md
-drat.sh
+^.git$
+^.gitignore$
+^.Rbuildignore$
+^.travis.yml$
+^appveyor.yml$
+^README.Rmd$
+^CONTRIBUTING.md$
+^drat.sh$
