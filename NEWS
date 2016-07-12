@@ -1,3 +1,7 @@
+# CHANGES TO v0.2.9 #
+
+ * Removed automatic installation of "Suggests" dependencies.
+
 # CHANGES TO v0.2.8 #
 
  * Fixed a small bug in printing the package name when `verbose = TRUE`.

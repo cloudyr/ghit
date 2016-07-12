@@ -3,7 +3,7 @@ function(repo, host = "github.com", credentials = NULL,
          build_args = NULL, build_vignettes = TRUE, uninstall = FALSE, 
          verbose = FALSE, 
          repos = getOption("repos", c(CRAN = "https://cloud.r-project.org")),
-         dependencies = c("Depends", "Imports", "Suggests"), ...) {
+         dependencies = c("Depends", "Imports"), ...) {
 
     opts <- list(...)
     
