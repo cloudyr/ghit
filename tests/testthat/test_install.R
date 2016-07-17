@@ -50,6 +50,10 @@ test_that("Install from a pull request", {
     remove.packages("ghit", lib = tmp)
 })
 
+test_that("An invalid reponame returns informative error", {
+  expect_error(install_github("missinguname"), "invalid 'repo' string")
+})
+
 # cleanup
 if ("ghit" %in% installed.packages(lib.loc = tmp)[, "Package"]) {
     remove.packages("ghit", lib = tmp)

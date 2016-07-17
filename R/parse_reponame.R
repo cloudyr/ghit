@@ -4,6 +4,11 @@ parse_reponame <- function(repo) {
     regex_repo <- "^[[:alnum:]._-]+/[[:alnum:]._-]+"
     reponame <- regmatches(repo, regexpr(regex_repo, repo))
     
+    # check for valid reponame
+    if(length(strsplit(reponame, "/")) == 0){
+      stop("invalid 'repo' string")
+    }
+    
     spl <- strsplit(reponame, "/")[[1]]
     username <- spl[1]
     pkgname <- spl[2]
