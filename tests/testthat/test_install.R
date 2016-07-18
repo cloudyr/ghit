@@ -51,7 +51,7 @@ test_that("Install from a pull request", {
 })
 
 test_that("An invalid reponame returns informative error", {
-  expect_error(install_github("missinguname"), "invalid 'repo' string")
+    expect_error(install_github("missinguser"), "Invalid 'repo' string")
 })
 
 # cleanup

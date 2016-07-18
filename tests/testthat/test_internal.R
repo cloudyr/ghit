@@ -8,6 +8,7 @@ test_that("Parse reponame", {
     expect_true(is.na(x1$branch))
     expect_true(is.na(x1$pull))
     expect_true(is.na(x1$subdir))
+    expect_error(ghit:::parse_reponame("ghit"), label = "correct invalid repo name error")
 })
 chk1 <- ghit:::checkout_github(x1, "github.com")
 chk2 <- ghit:::checkout_github(x1, "github.com", verbose = TRUE)

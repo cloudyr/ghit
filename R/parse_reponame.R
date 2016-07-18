@@ -6,7 +6,7 @@ parse_reponame <- function(repo) {
     
     # check for valid reponame
     if(length(strsplit(reponame, "/")) == 0){
-      stop("invalid 'repo' string")
+      stop(paste0("Invalid 'repo' string: ", repo))
     }
     
     spl <- strsplit(reponame, "/")[[1]]

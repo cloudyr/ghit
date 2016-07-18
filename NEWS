@@ -1,3 +1,7 @@
+# CHANGES TO v0.2.10 #
+
+ * Added more informative error when repo string is malformed. (#17, h/t Joseph Stachelek)
+
 # CHANGES TO v0.2.9 #
 
  * Removed automatic installation of "Suggests" dependencies.
