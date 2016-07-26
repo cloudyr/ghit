@@ -6,4 +6,4 @@
 ^README.Rmd$
 ^CONTRIBUTING.md$
 ^drat.sh$
-^revdep/
+/revdep
