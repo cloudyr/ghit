@@ -121,7 +121,7 @@ function(repo, host = "github.com", credentials = NULL,
     
     v_out <- sapply(to_install, function(x) {
         if ("lib" %in% names(opts)) {
-            z <- try(as.character(utils::packageVersion(x, lib.loc = c(opts$lib,.libPaths())), silent = TRUE)
+            z <- try(as.character(utils::packageVersion(x, lib.loc = c(opts$lib,.libPaths()))), silent = TRUE)
         } else {
             z <- try(as.character(utils::packageVersion(x)), silent = TRUE)
         }
