@@ -35,7 +35,7 @@ function(repo, host = "github.com", credentials = NULL,
          build_args = NULL, build_vignettes = TRUE, uninstall = FALSE, 
          verbose = FALSE, 
          repos = NULL,
-         type = "both",
+         type = if (.Platform[["pkgType"]] %in% "win.binary") "both" else "source",
          dependencies = c("Depends", "Imports"), ...) {
 
     opts <- list(...)

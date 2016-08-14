@@ -6,8 +6,9 @@
 \usage{
 install_github(repo, host = "github.com", credentials = NULL,
   build_args = NULL, build_vignettes = TRUE, uninstall = FALSE,
-  verbose = FALSE, repos = NULL, type = "both",
-  dependencies = c("Depends", "Imports"), ...)
+  verbose = FALSE, repos = NULL, type = if (.Platform[["pkgType"]] \%in\%
+  "win.binary") "both" else "source", dependencies = c("Depends", "Imports"),
+  ...)
 }
 \arguments{
 \item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a branch (\dQuote{leeper/ghit[dev]}), a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or subdirectory (\dQuote{leeper/ghit/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{leeper/ghit[master]@abc123/R}).}
