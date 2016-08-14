@@ -6,8 +6,8 @@
 \usage{
 install_github(repo, host = "github.com", credentials = NULL,
   build_args = NULL, build_vignettes = TRUE, uninstall = FALSE,
-  verbose = FALSE, repos = NULL, dependencies = c("Depends", "Imports"),
-  ...)
+  verbose = FALSE, repos = NULL, type = "both",
+  dependencies = c("Depends", "Imports"), ...)
 }
 \arguments{
 \item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a branch (\dQuote{leeper/ghit[dev]}), a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or subdirectory (\dQuote{leeper/ghit/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{leeper/ghit[master]@abc123/R}).}
@@ -23,6 +23,8 @@ install_github(repo, host = "github.com", credentials = NULL,
 \item{verbose}{A logical specifying whether to print details of package building and installation.}
 
 \item{repos}{A character vector specifying one or more URLs for CRAN-like repositories from which package dependencies might be installed. By default, value is taken from \code{options("repos")} or set to the CRAN cloud repository.}
+
+\item{type}{A character vector passed to the \code{type} argument of \code{\link[utils]{install.packages}}.}
 
 \item{dependencies}{A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).}
 

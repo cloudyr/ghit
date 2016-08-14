@@ -8,6 +8,7 @@
 #' @param uninstall A logical specifying whether to uninstall previous installations using \code{\link[utils]{remove.packages}} before attempting install. This is useful for installing an older version of a package than the one currently installed.
 #' @param verbose A logical specifying whether to print details of package building and installation.
 #' @param repos A character vector specifying one or more URLs for CRAN-like repositories from which package dependencies might be installed. By default, value is taken from \code{options("repos")} or set to the CRAN cloud repository.
+#' @param type A character vector passed to the \code{type} argument of \code{\link[utils]{install.packages}}.
 #' @param dependencies A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).
 #' @param \dots Additional arguments to control installation of package, passed to \code{\link[utils]{install.packages}}.
 #' @return A named character vector of R package versions installed.
@@ -34,6 +35,7 @@ function(repo, host = "github.com", credentials = NULL,
          build_args = NULL, build_vignettes = TRUE, uninstall = FALSE, 
          verbose = FALSE, 
          repos = NULL,
+         type = "both",
          dependencies = c("Depends", "Imports"), ...) {
 
     opts <- list(...)
@@ -112,7 +114,7 @@ function(repo, host = "github.com", credentials = NULL,
         rm(tmp_repos)
     }
     repos <- c("TemporaryRepo" = repodir, repos)
-    utils::install.packages(to_install, type = "source", 
+    utils::install.packages(to_install, type = type, 
                             repos = repos,
                             dependencies = dependencies,
                             verbose = verbose,

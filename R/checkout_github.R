@@ -66,7 +66,7 @@ checkout_github <- function(p, host = "github.com", credentials = NULL, verbose 
         ghitmsg(verbose, message(sprintf("Checking out package subdirectory for %s...", p$pkgname)) )
         d <- file.path(d, p$subdir)
     }
-    p$sha1 <- commits(gitrepo)[[1]]@sha
+    p$sha1 <- git2r::commits(gitrepo)[[1]]@sha
     try(add_metadata(d, p, verbose = verbose), silent = TRUE)
     return(d)
 }
