@@ -121,7 +121,7 @@ function(repo, host = "github.com", credentials = NULL,
     
     v_out <- sapply(to_install, function(x) {
         if ("lib" %in% names(opts)) {
-            z <- try(as.character(utils::packageVersion(x, lib.loc = c(.libPaths(), opts$lib))), silent = TRUE)
+            z <- try(as.character(utils::packageVersion(x, lib.loc = c(opts$lib,.libPaths())), silent = TRUE)
         } else {
             z <- try(as.character(utils::packageVersion(x)), silent = TRUE)
         }
@@ -141,7 +141,7 @@ setup_repodir <- function() {
     suppressWarnings(dir.create(file.path(repodir, "src")))
     suppressWarnings(dir.create(file.path(repodir, "src", "contrib")))
     on.exit(unlink(repodir), add = TRUE)
-    return(repodir)
+    return(paste0("file:///", repodir))
 }
 
 uninstall_old <- function(pkgs, lib, verbose = FALSE) {    
