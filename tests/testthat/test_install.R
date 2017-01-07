@@ -24,7 +24,7 @@ test_that("Install from a branch", {
     if ("anRpackage" %in% installed.packages(lib = tmp)[, "Package"]) {
         remove.packages("anRpackage", lib = tmp)
     }
-    expect_true(length(i4 <- install_bitbucket("imanuelcostigan/devtest[kitten]", lib = tmp)) == 1)
+    expect_true(length(i4 <- install_bitbucket("imanuelcostigan/devtest[dev]", lib = tmp)) == 1)
     if ("devtest" %in% installed.packages(lib = tmp)[, "Package"]) {
         remove.packages("devtest", lib = tmp)
     }
@@ -32,13 +32,14 @@ test_that("Install from a branch", {
 
 test_that("Install from a commit ref", {
     expect_true(length(i5 <- suppressWarnings(install_github("cloudyr/ghit@6d118d08", lib = tmp))) == 1)
-    expect_true(length(i5 <- suppressWarnings(install_bitbucket("imanuelcostigan/devtest@c3077b6", lib = tmp))) == 1)
+    expect_true(length(i5 <- suppressWarnings(install_bitbucket("imanuelcostigan/devtest@309fa0a", lib = tmp))) == 1)
     remove.packages(c("ghit", "devtest"), lib = tmp)
 })
 
 test_that("Install from a tag", {
     expect_true(length(i6 <- suppressWarnings(install_github("cloudyr/ghit@v0.1.1", lib = tmp))) == 1)
-    remove.packages("ghit", lib = tmp)
+    expect_true(length(i6 <- suppressWarnings(install_bitbucket("imanuelcostigan/devtest@v0.1", lib = tmp))) == 1)
+    remove.packages(c("ghit", "devtest"), lib = tmp)
 })
 
 test_that("Install from a pull request", {
