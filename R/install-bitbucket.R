@@ -1,4 +1,4 @@
-install_github <- function(repo, host = "github.com", credentials = NULL,
+install_bitbucket <- function(repo, host = "bitbucket.org", credentials = NULL,
     build_args = NULL, build_vignettes = TRUE, uninstall = FALSE,
     verbose = FALSE,
     repos = NULL,
@@ -25,7 +25,7 @@ install_github <- function(repo, host = "github.com", credentials = NULL,
         # parse reponame
         ghitmsg(verbose, message(sprintf("Parsing reponame for '%s'...", x)))
         p <- parse_reponame(repo = x)
-        d <- checkout_github(p, host = host, credentials = credentials, verbose = verbose)
+        d <- checkout_bitbucket(p, host = host, credentials = credentials, verbose = verbose)
         on.exit(unlink(d), add = TRUE)
 
         ghitmsg(verbose, message(sprintf("Reading package metadata for '%s'...", x)))
@@ -105,25 +105,25 @@ install_github <- function(repo, host = "github.com", credentials = NULL,
 }
 
 
-checkout_github <- function(p, host = "github.com", credentials = NULL, verbose = FALSE) {
+checkout_bitbucket <- function(p, host = "bitbucket.org", credentials = NULL, verbose = FALSE) {
     ghitmsg(verbose, message(sprintf("Creating local git repository for %s...", p$pkgname)) )
     d <- tempfile(pattern = p$pkgname)
     dir.create(d)
     gitrepo <- git2r::init(d)
     git2r::config(gitrepo, user.name = "ghit", user.email = "example@example.com")
-    git2r::remote_add(gitrepo, "github",
+    git2r::remote_add(gitrepo, "bitbucket",
         paste0("https://", host, "/", paste(p$user, p$pkgname, sep = "/"), ".git"))
 
     if (is.na(p$pull)) {
         if (verbose) {
             ghitmsg(verbose, message(sprintf("Checking out package %s to local git repository...", p$pkgname)))
-            git2r::fetch(gitrepo, name = "github", credentials = credentials)
+            git2r::fetch(gitrepo, name = "bitbucket", credentials = credentials)
         } else {
-            utils::capture.output(git2r::fetch(gitrepo, name = "github", credentials = credentials))
+            utils::capture.output(git2r::fetch(gitrepo, name = "bitbucket", credentials = credentials))
         }
         if (!is.na(p$branch)) {
             ghitmsg(verbose, message(sprintf("Checking out branch %s for package %s...", p$branch, p$pkgname)))
-            ghitmsg(!length(grep(paste0("github/", p$branch), names(git2r::branches(gitrepo)))),
+            ghitmsg(!length(grep(paste0("bitbucket/", p$branch), names(git2r::branches(gitrepo)))),
                 stop("Branch not found!"))
             git2r::checkout(gitrepo, branch = p$branch, create = TRUE, force = TRUE)
         } else {
@@ -135,15 +135,15 @@ checkout_github <- function(p, host = "github.com", credentials = NULL, verbose 
             stop("Checkout of pull requests requires git2r version >= 0.13.1.9000") )
         ghitmsg(verbose,
             message(sprintf("Finding pull request #%s for package %s...", p$pull, p$pkgname)) )
-        rem <- git2r::remote_ls("github", gitrepo)
+        rem <- git2r::remote_ls("bitbucket", gitrepo)
         w <- which(grepl(paste0("refs/pull/",p$pull,"/head"), names(rem), fixed = TRUE))
         ghitmsg(!length(w), stop(sprintf("Pull request #%s not found for %s!", p$pull, p$pkgname)) )
         if (verbose) {
             message(sprintf("Extracting pull request #%s for %s...", p$pull, p$pkgname))
-            git2r::fetch(gitrepo, name = "github", credentials = credentials,
+            git2r::fetch(gitrepo, name = "bitbucket", credentials = credentials,
                 refspec = paste0("pull/",p$pull,"/head:refs/heads/PULLREQUEST", p$pull))
         } else {
-            capture.output(git2r::fetch(gitrepo, name = "github", credentials = credentials,
+            capture.output(git2r::fetch(gitrepo, name = "bitbucket", credentials = credentials,
                 refspec = paste0("pull/",p$pull,"/head:refs/heads/PULLREQUEST", p$pull)))
         }
         ghitmsg(verbose, message(sprintf("Checking out pull request %s for %s...", p$pull, p$pkgname)) )
