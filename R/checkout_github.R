@@ -15,7 +15,7 @@ checkout_github <- function(p, host = "github.com", credentials = NULL, verbose 
             utils::capture.output(git2r::fetch(gitrepo, name = "github", credentials = credentials))
         }    
         if (!is.na(p$branch)) {
-            ghitmsg(verbose, message(sprintf("Checking out branch %s for packge %s...", p$branch, p$pkgname)))
+            ghitmsg(verbose, message(sprintf("Checking out branch %s for package %s...", p$branch, p$pkgname)))
             ghitmsg(!length(grep(paste0("github/", p$branch), names(git2r::branches(gitrepo)))), 
                     stop("Branch not found!"))
             git2r::checkout(gitrepo, branch = p$branch, create = TRUE, force = TRUE)
@@ -66,7 +66,7 @@ checkout_github <- function(p, host = "github.com", credentials = NULL, verbose 
         ghitmsg(verbose, message(sprintf("Checking out package subdirectory for %s...", p$pkgname)) )
         d <- file.path(d, p$subdir)
     }
-    p$sha1 <- commits(gitrepo)[[1]]@sha
+    p$sha1 <- git2r::commits(gitrepo)[[1]]@sha
     try(add_metadata(d, p, verbose = verbose), silent = TRUE)
     return(d)
 }
