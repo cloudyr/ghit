@@ -1,6 +1,13 @@
 # CHANGES TO v0.2.13 #
 
 * Added support for Bitbucket remote by way of `install_bitbucket()`. Note that installing from a pull request reference is unsupported by Bitbucket (#15, @imanuelcostigan).
+
+# CHANGES TO v0.2.12 #
+
+* Removed hard-coded type argument in `install.packages()` to allow install of binary package dependencies on Windows or OS X. (#19)
+* Changed the way a default CRAN mirror was being set in cases where there was no default mirror specified. (#19)
+* Switched to roxygen2 documentation.
+
 # CHANGES TO v0.2.11 #
 
  * Removed hard-coded `type` argument in `install.packages()` to allow install of binary package dependencies on Windows or OS X. (#19)
