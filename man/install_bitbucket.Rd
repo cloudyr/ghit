@@ -11,7 +11,7 @@ install_bitbucket(repo, host = "bitbucket.org", credentials = NULL,
   ...)
 }
 \arguments{
-\item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{imanuelcostigan/devtest}), or optionally a branch (\dQuote{imanuelcostigan/devtest[dev]}), a reference (\dQuote{imanuelcostigan/devtest@309fa0a}), tag (\dQuote{imanuelcostigan/devtest@v0.1}), or subdirectory (\dQuote{imanuelcostigan/samplepackage/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{imanuelcostigan/devtest[master]@abc123/R}).}
+\item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{imanuelcostigan/devtest}), or optionally a branch (\dQuote{imanuelcostigan/devtest[dev]}), a reference (\dQuote{imanuelcostigan/devtest@309fa0a}), tag (\dQuote{imanuelcostigan/devtest@v0.1}), or subdirectory (\dQuote{imanuelcostigan/samplepackage/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{imanuelcostigan/devtest[master]@abc123/R}). As the use of pull request (PR) references are not supported by Bitbucket, you should install from the PR's source repository and branch.}
 
 \item{host}{A character string naming a host, to enable installation of enterprise-hosted Bitbucket Server packages.}
 
