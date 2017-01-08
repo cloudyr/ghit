@@ -45,7 +45,7 @@ test_that("Install from a tag", {
 test_that("Install from a pull request", {
     if (packageVersion("git2r") > "0.13.1.9000") {
         expect_true(length(i7 <- suppressWarnings(install_github("cloudyr/ghit#13", lib = tmp))) == 1)
-        expect_true(length(i7 <- suppressWarnings(install_bitbucket("imanuelcostigan/devtest#1", lib = tmp))) == 1)
+        expect_error(length(i7 <- suppressWarnings(install_bitbucket("imanuelcostigan/devtest#1", lib = tmp))) == 1)
     } else {
         expect_true(TRUE)
     }

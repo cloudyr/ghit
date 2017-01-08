@@ -160,24 +160,10 @@ checkout_bitbucket <- function(p, host = "bitbucket.org", credentials = NULL, ve
             git2r::checkout(gitrepo, branch = "master", create = TRUE, force = TRUE)
         }
     } else {
-        # handle pull request
-        ghitmsg(packageVersion("git2r") < "0.13.1.9000",
-            stop("Checkout of pull requests requires git2r version >= 0.13.1.9000") )
-        ghitmsg(verbose,
-            message(sprintf("Finding pull request #%s for package %s...", p$pull, p$pkgname)) )
-        rem <- git2r::remote_ls("bitbucket", gitrepo)
-        w <- which(grepl(paste0("refs/pull/",p$pull,"/head"), names(rem), fixed = TRUE))
-        ghitmsg(!length(w), stop(sprintf("Pull request #%s not found for %s!", p$pull, p$pkgname)) )
-        if (verbose) {
-            message(sprintf("Extracting pull request #%s for %s...", p$pull, p$pkgname))
-            git2r::fetch(gitrepo, name = "bitbucket", credentials = credentials,
-                refspec = paste0("pull/",p$pull,"/head:refs/heads/PULLREQUEST", p$pull))
-        } else {
-            capture.output(git2r::fetch(gitrepo, name = "bitbucket", credentials = credentials,
-                refspec = paste0("pull/",p$pull,"/head:refs/heads/PULLREQUEST", p$pull)))
-        }
-        ghitmsg(verbose, message(sprintf("Checking out pull request %s for %s...", p$pull, p$pkgname)) )
-        git2r::checkout(gitrepo, branch = paste0("PULLREQUEST", p$pull), force = TRUE)
+        # Bitbucket.org does not support the pull request refspec
+        # https://bitbucket.org/site/master/issues/5814/reify-pull-requests-by-making-them-a-ref
+        stop("Bitbucket.org does not support pull request refspecs. ",
+            "You should install from the source branch of the pull request directly.")
     }
     # checkout commits or tags
     if (!is.na(p$ref)) {
