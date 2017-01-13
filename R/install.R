@@ -50,8 +50,18 @@ function(repo, host = "github.com", credentials = NULL,
         }
     }
     
-    # setup drat
-    repodir <- setup_repodir()
+    # setup drat & configure `repos`
+    repodir <- make_drat(verbose = verbose)
+    if (is.null(repos)) {
+        tmp_repos <- getOption("repos")
+        if ("@CRAN@"  %in% tmp_repos) {
+            tmp_repos["CRAN"] <- "https://cloud.r-project.org"
+        }
+        repos <- tmp_repos
+        rm(tmp_repos)
+    }
+    repos <- c("TemporaryRepo" = repodir, repos)
+    
     
     # download and build packages
     to_install <- sapply(unique(repo), function(x) {
@@ -65,6 +75,8 @@ function(repo, host = "github.com", credentials = NULL,
         description <- read.dcf(file.path(d, "DESCRIPTION"))
         p$pkgname <- unname(description[1, "Package"])
         vers <- unname(description[1,"Version"])
+        suggests <- strsplit(gsub("[[:space:]]+", "", description[1, "Suggests"]), ",")[[1L]]
+        
         if ("lib" %in% names(opts)) {
             if (p$pkgname %in% installed.packages(lib.loc = c(.libPaths(), opts$lib))[, "Package"]) {
                 curr <- try(as.character(utils::packageVersion(p$pkgname, lib.loc = c(.libPaths(), opts$lib))), silent = TRUE)
@@ -86,6 +98,22 @@ function(repo, host = "github.com", credentials = NULL,
         }
         
         # build package and insert into drat
+        if (isTRUE(build_vignettes)) {
+            # install Suggests dependencies, non-recursively
+            browser()
+            if (!is.null(suggests) && suggests != "") {
+                ghitmsg(verbose, message(sprintf("Installing 'Suggests' packages for '%s'...", x)))
+                suggests <- suggests[!suggests %in% installed.packages()[, "Package"]]
+                if (length(suggests)) {
+                    utils::install.packages(suggests, type = type, 
+                                            repos = repos,
+                                            dependencies = NA,
+                                            verbose = verbose,
+                                            quiet = !verbose,
+                                            ...)
+                }
+            }
+        }
         build_and_insert(p$pkgname, d, vers, build_args, verbose = verbose)
         return(p$pkgname)
     })
@@ -102,18 +130,9 @@ function(repo, host = "github.com", credentials = NULL,
         try(sapply(loaded, unloadNamespace))
     }
     ghitmsg(verbose, 
-            message(sprintf("Installing packages%s...", 
+            message(sprintf("Installing packages %s...", 
                     if (length(dependencies)) paste0(" and ", paste(dependencies, collapse = ", ")) else ""))
            )
-    if (is.null(repos)) {
-        tmp_repos <- getOption("repos")
-        if ("@CRAN@"  %in% tmp_repos) {
-            tmp_repos["CRAN"] <- "https://cloud.r-project.org"
-        }
-        repos <- tmp_repos
-        rm(tmp_repos)
-    }
-    repos <- c("TemporaryRepo" = repodir, repos)
     utils::install.packages(to_install, type = type, 
                             repos = repos,
                             dependencies = dependencies,
@@ -135,15 +154,6 @@ function(repo, host = "github.com", credentials = NULL,
     }
     
     return(v_out)
-}
-
-setup_repodir <- function() {
-    repodir <- file.path(tempdir(), "ghitdrat")
-    suppressWarnings(dir.create(repodir))
-    suppressWarnings(dir.create(file.path(repodir, "src")))
-    suppressWarnings(dir.create(file.path(repodir, "src", "contrib")))
-    on.exit(unlink(repodir), add = TRUE)
-    return(paste0("file:///", repodir))
 }
 
 uninstall_old <- function(pkgs, lib, verbose = FALSE) {    
