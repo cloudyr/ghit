@@ -2,6 +2,7 @@
 % Please edit documentation in R/install-bitbucket.R
 \name{install_bitbucket}
 \alias{install_bitbucket}
+\alias{install_bitbucket_server}
 \title{Install R package from Bitbucket}
 \usage{
 install_bitbucket(repo, host = "bitbucket.org", credentials = NULL,
@@ -9,35 +10,82 @@ install_bitbucket(repo, host = "bitbucket.org", credentials = NULL,
   verbose = FALSE, repos = NULL, type = if (.Platform[["pkgType"]] \%in\%
   "win.binary") "both" else "source", dependencies = c("Depends", "Imports"),
   ...)
+
+install_bitbucket_server(repo, host = Sys.getenv("BITBUCKET_HOST"),
+  credentials = bitbucket_cred(), build_args = NULL,
+  build_vignettes = TRUE, uninstall = FALSE, verbose = FALSE,
+  repos = NULL, type = if (.Platform[["pkgType"]] \%in\% "win.binary")
+  "both" else "source", dependencies = c("Depends", "Imports"), ...)
 }
 \arguments{
-\item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{imanuelcostigan/devtest}), or optionally a branch (\dQuote{imanuelcostigan/devtest[dev]}), a reference (\dQuote{imanuelcostigan/devtest@309fa0a}), tag (\dQuote{imanuelcostigan/devtest@v0.1}), or subdirectory (\dQuote{imanuelcostigan/samplepackage/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{imanuelcostigan/devtest[master]@abc123/R}). As the use of pull request (PR) references are not supported by Bitbucket, you should install from the PR's source repository and branch.}
+\item{repo}{A character vector naming one or more GitHub repository
+containing an R package to install (e.g.,
+\dQuote{imanuelcostigan/devtest}), or optionally a branch
+(\dQuote{imanuelcostigan/devtest[dev]}), a reference
+(\dQuote{imanuelcostigan/devtest@309fa0a}), tag
+(\dQuote{imanuelcostigan/devtest@v0.1}), or subdirectory
+(\dQuote{imanuelcostigan/samplepackage/R}). These arguments can be placed
+in any order and in any combination (e.g.,
+\dQuote{imanuelcostigan/devtest[master]@abc123/R}). As the use of pull
+request (PR) references are not supported by Bitbucket, you should install
+from the PR's source repository and branch.}
 
-\item{host}{A character string naming a host, to enable installation of enterprise-hosted Bitbucket Server packages.}
+\item{host}{A character string naming a host. This defaults to
+\code{bitbucket.org} when using the \code{install_bitbucket()} interface
+and can be set other values to enable installation of Bitbucket Server
+packages. However, the \code{install_bitbucket_server()} provides a more
+convenient default value sourced from the \code{BITBUCKET_HOST} environment
+variable by default.}
 
-\item{build_args}{A character string used to control the package build, passed to \code{R CMD build}.}
+\item{credentials}{An argument passed to the \code{credentials} argument to
+\code{\link[git2r]{fetch}}. See \code{\link[git2r]{cred_user_pass}} or
+\code{\link[git2r]{cred_ssh_key}}. This defaults to: using the use the SSH
+key via \code{\link[git2r]{cred_ssh_key}} when using the
+\code{install_bitbucket()} interface; and supplying to
+\code{\link[git2r]{cred_user_pass}} the username and password values stored
+in the \code{USERNAME} and \code{BITBUCKET_PASS} environment variables when
+using \code{install_bitbucket_server()} interface.}
 
-\item{build_vignettes}{A logical specifying whether to build package vignettes, passed to \code{R CMD build}. Can be slow. Note: The default is \code{TRUE}, unlike in \code{devtools::install_github()}.}
+\item{build_args}{A character string used to control the package build,
+passed to \code{R CMD build}.}
 
-\item{uninstall}{A logical specifying whether to uninstall previous installations using \code{\link[utils]{remove.packages}} before attempting install. This is useful for installing an older version of a package than the one currently installed.}
+\item{build_vignettes}{A logical specifying whether to build package
+vignettes, passed to \code{R CMD build}. Can be slow. Note: The default is
+\code{TRUE}, unlike in \code{devtools::install_github()}.}
 
-\item{verbose}{A logical specifying whether to print details of package building and installation.}
+\item{uninstall}{A logical specifying whether to uninstall previous
+installations using \code{\link[utils]{remove.packages}} before attempting
+install. This is useful for installing an older version of a package than
+the one currently installed.}
 
-\item{repos}{A character vector specifying one or more URLs for CRAN-like repositories from which package dependencies might be installed. By default, value is taken from \code{options("repos")} or set to the CRAN cloud repository.}
+\item{verbose}{A logical specifying whether to print details of package
+building and installation.}
 
-\item{type}{A character vector passed to the \code{type} argument of \code{\link[utils]{install.packages}}.}
+\item{repos}{A character vector specifying one or more URLs for CRAN-like
+repositories from which package dependencies might be installed. By
+default, value is taken from \code{options("repos")} or set to the CRAN
+cloud repository.}
 
-\item{dependencies}{A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).}
+\item{type}{A character vector passed to the \code{type} argument of
+\code{\link[utils]{install.packages}}.}
 
-\item{credentials}{An}{argument passed to the \code{credentials} argument to \code{\link[git2r]{clone}}. See \code{\link[git2r]{cred_user_pass}} or \code{\link[git2r]{cred_ssh_key}}.}
+\item{dependencies}{A character vector specifying which dependencies to
+install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).}
 
-\item{\dots}{Additional arguments to control installation of package, passed to \code{\link[utils]{install.packages}}.}
+\item{\dots}{Additional arguments to control installation of package, passed
+to \code{\link[utils]{install.packages}}.}
 }
 \value{
 A named character vector of R package versions installed.
 }
 \description{
-\code{install_bitbucket} allows users to install R packages hosted on Bitbucket without needing to install or load the heavy dependencies required by devtools. ghit provides a drop-in replacement that provides (almost) identical functionality to \code{devtools::install_bitbucket()}.
+\code{install_bitbucket} allows users to install R packages
+  hosted on Bitbucket without needing to install or load the heavy
+  dependencies required by devtools. ghit provides a drop-in replacement that
+  provides (almost) identical functionality to
+  \code{devtools::install_bitbucket()}. The \code{install_bitbucket_server}
+  interface provides some convenient default values for \code{host} and
+  \code{credentials} for corporate users.
 }
 \examples{
 \dontrun{
@@ -45,6 +93,9 @@ tmp <- file.path(tempdir(), "tmplib")
 dir.create(tmp)
 # install a single package. Multiple package install is also supported.
 install_bitbucket("imanuelcostigan/devtest", lib = tmp)
+
+# Install from Bitbucket Server
+install_bitbucket_server("projectname/reponame")
 
 # cleanup
 unlink(tmp, recursive = TRUE)
