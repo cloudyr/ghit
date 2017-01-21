@@ -1,6 +1,7 @@
 # CHANGES TO v0.2.13 #
 
 * Added support for Bitbucket remote by way of `install_bitbucket()`. Note that installing from a pull request reference is unsupported by Bitbucket (#15, @imanuelcostigan).
+* Implemented `install_bitbucket_server()` which provides a more convenient interface to using Bitbucket Server for some users (@imanuelcostigan)
 
 # CHANGES TO v0.2.12 #
 
