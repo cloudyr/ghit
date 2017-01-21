@@ -1,9 +1,7 @@
 build_and_insert <- function(pkgname, d, ver, build_args = "", verbose = FALSE) {
     
     arg <- c("CMD build", build_args, d)
-    if (verbose) {
-        message(sprintf("Building package %s...", pkgname))
-    }
+    ghitmsg(verbose, message(sprintf("Building package %s...", pkgname)))
     rpath <- file.path(R.home("bin"), "R")
     build_output <- tempfile()
     on.exit(unlink(build_output))
@@ -14,8 +12,7 @@ build_and_insert <- function(pkgname, d, ver, build_args = "", verbose = FALSE) 
     }
     tarball <- file.path(paste0(pkgname, "_", ver, ".tar.gz"))
     on.exit(unlink(tarball), add = TRUE)
-    
-    make_drat()
+    pkgdir <- make_drat(verbose = verbose)
     ghitmsg(verbose, message(sprintf("Writing package %s to internal repository...", pkgname)))
     file.copy(tarball, to = pkgdir, overwrite = TRUE)
     tools::write_PACKAGES(pkgdir, type = "source")

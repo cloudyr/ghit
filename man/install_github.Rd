@@ -7,8 +7,7 @@
 install_github(repo, host = "github.com", credentials = NULL,
   build_args = NULL, build_vignettes = TRUE, uninstall = FALSE,
   verbose = FALSE, repos = NULL, type = if (.Platform[["pkgType"]] \%in\%
-  "win.binary") "both" else "source", dependencies = c("Depends", "Imports"),
-  ...)
+  "win.binary") "both" else "source", dependencies = NA, ...)
 }
 \arguments{
 \item{repo}{A character vector naming one or more GitHub repository containing an R package to install (e.g., \dQuote{leeper/ghit}), or optionally a branch (\dQuote{leeper/ghit[dev]}), a reference (\dQuote{leeper/ghit@b200fb1bd}), tag (\dQuote{leeper/ghit@v0.2}), or subdirectory (\dQuote{leeper/ghit/R}). These arguments can be placed in any order and in any combination (e.g., \dQuote{leeper/ghit[master]@abc123/R}).}
@@ -27,7 +26,7 @@ install_github(repo, host = "github.com", credentials = NULL,
 
 \item{type}{A character vector passed to the \code{type} argument of \code{\link[utils]{install.packages}}.}
 
-\item{dependencies}{A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).}
+\item{dependencies}{A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.). The default, \code{NA}, means \code{c("Depends", "Imports", "LinkingTo")}. See \code{\link[utils]{install.packages}} for a fuller explanation.}
 
 \item{credentials}{An}{argument passed to the \code{credentials} argument to \code{\link[git2r]{clone}}. See \code{\link[git2r]{cred_user_pass}} or \code{\link[git2r]{cred_ssh_key}}.}
 

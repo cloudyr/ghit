@@ -1,4 +1,6 @@
-ghitmsg <- function(verbose, msg) {
-    if(verbose) msg
+ghitmsg <- function(verbose = FALSE, msg) {
+    if(isTRUE(verbose)) {
+        msg
+    }
     invisible()
 }

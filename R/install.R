@@ -9,7 +9,7 @@
 #' @param verbose A logical specifying whether to print details of package building and installation.
 #' @param repos A character vector specifying one or more URLs for CRAN-like repositories from which package dependencies might be installed. By default, value is taken from \code{options("repos")} or set to the CRAN cloud repository.
 #' @param type A character vector passed to the \code{type} argument of \code{\link[utils]{install.packages}}.
-#' @param dependencies A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.).
+#' @param dependencies A character vector specifying which dependencies to install (of \dQuote{Depends}, \dQuote{Imports}, \dQuote{Suggests}, etc.). The default, \code{NA}, means \code{c("Depends", "Imports", "LinkingTo")}. See \code{\link[utils]{install.packages}} for a fuller explanation.
 #' @param \dots Additional arguments to control installation of package, passed to \code{\link[utils]{install.packages}}.
 #' @return A named character vector of R package versions installed.
 #' @author Thomas J. Leeper
@@ -36,7 +36,7 @@ function(repo, host = "github.com", credentials = NULL,
          verbose = FALSE, 
          repos = NULL,
          type = if (.Platform[["pkgType"]] %in% "win.binary") "both" else "source",
-         dependencies = c("Depends", "Imports"), ...) {
+         dependencies = NA, ...) {
 
     opts <- list(...)
     
@@ -51,7 +51,7 @@ function(repo, host = "github.com", credentials = NULL,
     }
     
     # setup drat & configure `repos`
-    repodir <- make_drat(verbose = verbose)
+    repodir <- file.path(tempdir(), "ghitdrat")
     if (is.null(repos)) {
         tmp_repos <- getOption("repos")
         if ("@CRAN@"  %in% tmp_repos) {
@@ -60,7 +60,7 @@ function(repo, host = "github.com", credentials = NULL,
         repos <- tmp_repos
         rm(tmp_repos)
     }
-    repos <- c("TemporaryRepo" = repodir, repos)
+    repos <- c("TemporaryRepo" = paste0("file:///", repodir), repos)
     
     
     # download and build packages
@@ -100,9 +100,8 @@ function(repo, host = "github.com", credentials = NULL,
         # build package and insert into drat
         if (isTRUE(build_vignettes)) {
             # install Suggests dependencies, non-recursively
-            browser()
             if (!is.null(suggests) && suggests != "") {
-                ghitmsg(verbose, message(sprintf("Installing 'Suggests' packages for '%s'...", x)))
+                ghitmsg(verbose, message(sprintf("Installing 'Suggests' packages for '%s'...", p$pkgname)))
                 suggests <- suggests[!suggests %in% installed.packages()[, "Package"]]
                 if (length(suggests)) {
                     utils::install.packages(suggests, type = type, 
@@ -131,7 +130,7 @@ function(repo, host = "github.com", credentials = NULL,
     }
     ghitmsg(verbose, 
             message(sprintf("Installing packages %s...", 
-                    if (length(dependencies)) paste0(" and ", paste(dependencies, collapse = ", ")) else ""))
+                    if (length(dependencies)) paste0("and ", paste(dependencies, collapse = ", ")) else ""))
            )
     utils::install.packages(to_install, type = type, 
                             repos = repos,

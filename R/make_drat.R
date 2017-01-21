@@ -1,17 +1,16 @@
 make_drat <- function(verbose) {
     repodir <- file.path(tempdir(), "ghitdrat", "src", "contrib")
     setup_repodir(verbose = verbose)
-    if (length(dir(repodir))) {
-        tools::write_PACKAGES(repodir, type = "source")
-    }
+    ghitmsg(verbose, message("Writing PACKAGES file for internal repository..."))
+    tools::write_PACKAGES(repodir, type = "source")
+
     win_os <- .Platform[["pkgType"]] %in% "win.binary"
     if (isTRUE(win_os)) {
         windir <- setup_repodir_windows(verbose = verbose)
-        if (length(dir(windir))) {
-            tools::write_PACKAGES(windir, type = "win.binary")
-        }
+        ghitmsg(verbose, message("Writing PACKAGES file for Windows binaries in internal repository..."))
+        tools::write_PACKAGES(windir, type = "win.binary")
     }
-    return(paste0("file:///", repodir))
+    return(repodir)
 }
 
 setup_repodir <- function(verbose) {
