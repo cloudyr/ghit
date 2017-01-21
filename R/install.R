@@ -128,10 +128,16 @@ function(repo, host = "github.com", credentials = NULL,
         ghitmsg(verbose, message(sprintf("Unloading packages %s...", paste0(loaded, collapse = ", "))))
         try(sapply(loaded, unloadNamespace))
     }
-    ghitmsg(verbose, 
-            message(sprintf("Installing packages %s...", 
-                    if (length(dependencies)) paste0("and ", paste(dependencies, collapse = ", ")) else ""))
-           )
+    dependencymsg <- if (length(dependencies)) {
+        if (is.na(dependencies[1L])) {
+            paste0(paste0(to_install, collapse = ", "), " and 'Depends', 'Imports', 'LinkingTo'")
+        } else {
+            paste0(paste0(to_install, collapse = ", "), " and ", paste0("'", dependencies, "'", collapse = ", "))
+        }
+    } else {
+        paste0(to_install, collapse = ", ")
+    }
+    ghitmsg(verbose, message(sprintf("Installing packages %s...", dependencymsg)))
     utils::install.packages(to_install, type = type, 
                             repos = repos,
                             dependencies = dependencies,
