@@ -1,3 +1,7 @@
+# CHANGES TO v0.2.15
+
+* Refactored various parts of internal code so that `install_github()` and `install_bitbucket()` rely on same workhorse functionality and thus do not duplicate as much code.
+
 # CHANGES TO v0.2.14
 
 * Improved installation of packages in `install_github()` when `build_vignettes = TRUE` (the default) and "Suggests" packages are not already installed by introducing a pre-build run of `install.packages()` for the "Suggests" packages. "Suggests" are not installed recursively unless "Suggests" is listed explicitly in `dependencies`. (#24)

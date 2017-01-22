@@ -73,13 +73,12 @@
 #' @importFrom tools write_PACKAGES
 #' @aliases install_bitbucket_server
 #' @export
-
 install_bitbucket <- function(repo, host = "bitbucket.org", credentials = NULL,
     build_args = NULL, build_vignettes = TRUE, uninstall = FALSE,
     verbose = FALSE,
     repos = NULL,
     type = if (.Platform[["pkgType"]] %in% "win.binary") "both" else "source",
-    dependencies = c("Depends", "Imports"), ...) {
+    dependencies = NA, ...) {
 
     opts <- list(...)
 
@@ -93,8 +92,8 @@ install_bitbucket <- function(repo, host = "bitbucket.org", credentials = NULL,
         }
     }
 
-    # setup drat
-    repodir <- setup_repodir()
+    # setup drat & configure `repos`
+    repos <- make_repos(repos = repos)
 
     # download and build packages
     to_install <- sapply(unique(repo), function(x) {
@@ -108,26 +107,17 @@ install_bitbucket <- function(repo, host = "bitbucket.org", credentials = NULL,
         description <- read.dcf(file.path(d, "DESCRIPTION"))
         p$pkgname <- unname(description[1, "Package"])
         vers <- unname(description[1,"Version"])
-        if ("lib" %in% names(opts)) {
-            if (p$pkgname %in% installed.packages(lib.loc = c(.libPaths(), opts$lib))[, "Package"]) {
-                curr <- try(as.character(utils::packageVersion(p$pkgname, lib.loc = c(.libPaths(), opts$lib))), silent = TRUE)
-            } else {
-                curr <- NA_character_
-            }
-        } else {
-            if (p$pkgname %in% installed.packages()[, "Package"]) {
-                curr <- try(as.character(utils::packageVersion(p$pkgname)), silent = TRUE)
-            } else {
-                curr <- NA_character_
+        check_pkg_version(p, vers = vers, lib = if ("lib" %in% names(opts)) c(.libPaths(), opts$lib) else .libPaths())
+        
+        # install Suggests dependencies, non-recursively
+        if ("Suggests" %in% colnames(description)) {
+            suggests <- strsplit(gsub("[[:space:]]+", "", description[1, "Suggests"]), ",")[[1L]]
+            if (isTRUE(build_vignettes) && !is.null(suggests) && suggests != "") {
+                preinstall_suggests(suggests = suggests, p = p, type = type, repos = repos, 
+                                    dependencies = dependencies, verbose = verbose, ...)
             }
         }
-        if (!inherits(curr, "try-error") && !is.na(curr)) {
-            com <- utils::compareVersion(vers, curr)
-            ghitmsg(com < 0,
-                warning(sprintf("Package %s older (%s) than currently installed version (%s).", p$pkgname, vers, curr))
-            )
-        }
-
+        
         # build package and insert into drat
         build_and_insert(p$pkgname, d, vers, build_args, verbose = verbose)
         return(p$pkgname)
@@ -139,45 +129,7 @@ install_bitbucket <- function(repo, host = "bitbucket.org", credentials = NULL,
     }
 
     # install packages from drat and dependencies from CRAN
-    loaded <- to_install[to_install %in% loadedNamespaces()]
-    if (length(loaded)) {
-        ghitmsg(verbose, message(sprintf("Unloading packages %s...", paste0(loaded, collapse = ", "))))
-        try(sapply(loaded, unloadNamespace))
-    }
-    ghitmsg(verbose,
-        message(sprintf("Installing packages%s...",
-            if (length(dependencies)) paste0(" and ", paste(dependencies, collapse = ", ")) else ""))
-    )
-    if (is.null(repos)) {
-        tmp_repos <- getOption("repos")
-        if ("@CRAN@"  %in% tmp_repos) {
-            tmp_repos["CRAN"] <- "https://cloud.r-project.org"
-        }
-        repos <- tmp_repos
-        rm(tmp_repos)
-    }
-    repos <- c("TemporaryRepo" = repodir, repos)
-    utils::install.packages(to_install, type = type,
-        repos = repos,
-        dependencies = dependencies,
-        verbose = verbose,
-        quiet = !verbose,
-        ...)
-
-    v_out <- sapply(to_install, function(x) {
-        if ("lib" %in% names(opts)) {
-            z <- try(as.character(utils::packageVersion(x, lib.loc = c(opts$lib,.libPaths()))), silent = TRUE)
-        } else {
-            z <- try(as.character(utils::packageVersion(x)), silent = TRUE)
-        }
-        if (inherits(z, "try-error")) NA_character_ else z
-    })
-    if (length(loaded)) {
-        ghitmsg(verbose, message(sprintf("reloading packages %s...", paste0(loaded, collapse = ", "))) )
-        sapply(loaded, requireNamespace)
-    }
-
-    return(v_out)
+    do_install(to_install, type = type, repos = repos, dependencies = dependencies, opts = opts, verbose = verbose, ...)
 }
 
 
