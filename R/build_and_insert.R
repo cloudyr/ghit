@@ -8,7 +8,7 @@ build_and_insert <- function(pkgname, d, ver, build_args = "", verbose = FALSE) 
     success <- suppressWarnings(system2(rpath, arg, stdout = build_output))
     if (success != 0) {
         stop(sprintf("Package build for %s failed with the following output:\n", pkgname), 
-             paste0(readLines(build_output), collapse = "\n"))
+             paste0(readLines(build_output), collapse = "\n"), call. = FALSE)
     }
     tarball <- file.path(paste0(pkgname, "_", ver, ".tar.gz"))
     on.exit(unlink(tarball), add = TRUE)
