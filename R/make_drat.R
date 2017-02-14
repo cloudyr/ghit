@@ -16,11 +16,13 @@ make_drat <- function(verbose) {
 setup_repodir <- function(verbose) {
     repodir <- file.path(tempdir(), "ghitdrat", "src")
     if ((getRversion() >= "3.2.0") && !dir.exists(repodir)) {
-        ghitmsg(verbose, message("Creating internal repository..."))
+        ghitmsg(verbose, message(sprintf("Creating internal package repository in %s...", repodir)))
         dir.create(file.path(tempdir(), "ghitdrat", "src", "contrib"), recursive = TRUE)
     } else if (!file.exists(repodir)) {
-        ghitmsg(verbose, message("Creating internal repository..."))
+        ghitmsg(verbose, message(sprintf("Creating internal package repository in %s...", repodir)))
         dir.create(file.path(tempdir(), "ghitdrat", "src", "contrib"), recursive = TRUE)
+    } else {
+        ghitmsg(verbose, message(sprintf("Using internal package repository in %s...", repodir)))
     }
     return(paste0("file:///", repodir))
 }

@@ -1,3 +1,8 @@
+# CHANGES TO v0.2.16
+
+* Better handling of "Suggests" dependencies. Added message about ignoring versions thereof.
+* Improved verbosity of installation messages when `verbose = TRUE`.
+
 # CHANGES TO v0.2.15
 
 * Refactored various parts of internal code so that `install_github()` and `install_bitbucket()` rely on same workhorse functionality and thus do not duplicate as much code.

@@ -9,14 +9,19 @@ do_install <- function(to_install, type, repos, dependencies = NA, opts, verbose
     }
     dependencymsg <- if (length(dependencies)) {
         if (is.na(dependencies[1L])) {
-            paste0(paste0(to_install, collapse = ", "), " and 'Depends', 'Imports', 'LinkingTo'")
+            paste0(ngettext(length(to_install), "Installing package ", "Installing packages "), 
+                   paste0(to_install, collapse = ", "), 
+                   " and 'Depends', 'Imports', 'LinkingTo'")
         } else {
-            paste0(paste0(to_install, collapse = ", "), " and ", paste0("'", dependencies, "'", collapse = ", "))
+            paste0(ngettext(length(to_install), "Installing package ", "Installing packages "), 
+                   paste0(to_install, collapse = ", "), 
+                   " and ", 
+                   paste0("'", dependencies, "'", collapse = ", "))
         }
     } else {
         paste0(to_install, collapse = ", ")
     }
-    ghitmsg(verbose, message(sprintf("Installing packages %s...", dependencymsg)))
+    ghitmsg(verbose, message(dependencymsg))
     utils::install.packages(to_install, type = type, 
                             repos = repos,
                             dependencies = dependencies,

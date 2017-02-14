@@ -1,7 +1,7 @@
 build_and_insert <- function(pkgname, d, ver, build_args = "", verbose = FALSE) {
     
     arg <- c("CMD build", build_args, d)
-    ghitmsg(verbose, message(sprintf("Building package %s...", pkgname)))
+    ghitmsg(verbose, message(sprintf("Building package %s (%s)...", pkgname, ver)))
     rpath <- file.path(R.home("bin"), "R")
     build_output <- tempfile()
     on.exit(unlink(build_output))

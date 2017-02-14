@@ -1,6 +1,6 @@
 checkout_github <- function(p, host = "github.com", credentials = NULL, verbose = FALSE) {
-    ghitmsg(verbose, message(sprintf("Creating local git repository for %s...", p$pkgname)) )
     d <- tempfile(pattern = p$pkgname)
+    ghitmsg(verbose, message(sprintf("Creating local git repository for %s in %s...", p$pkgname, d)) )
     dir.create(d)
     gitrepo <- git2r::init(d)
     git2r::config(gitrepo, user.name = "ghit", user.email = "example@example.com")

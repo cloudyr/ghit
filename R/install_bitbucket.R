@@ -111,7 +111,7 @@ install_bitbucket <- function(repo, host = "bitbucket.org", credentials = NULL,
         
         # install Suggests dependencies, non-recursively
         if ("Suggests" %in% colnames(description)) {
-            suggests <- strsplit(gsub("[[:space:]]+", "", description[1, "Suggests"]), ",")[[1L]]
+            suggests <- clean_suggests(description)
             if (isTRUE(build_vignettes) && !is.null(suggests) && suggests != "") {
                 preinstall_suggests(suggests = suggests, p = p, type = type, repos = repos, 
                                     dependencies = dependencies, verbose = verbose, ...)
