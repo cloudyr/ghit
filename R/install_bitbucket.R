@@ -77,7 +77,7 @@ install_bitbucket <- function(repo, host = "bitbucket.org", credentials = NULL,
     build_args = NULL, build_vignettes = TRUE, uninstall = FALSE,
     verbose = FALSE,
     repos = NULL,
-    type = if (.Platform[["pkgType"]] %in% "win.binary") "both" else "source",
+    type = "source",
     dependencies = NA, ...) {
 
     opts <- list(...)

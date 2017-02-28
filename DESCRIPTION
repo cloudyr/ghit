@@ -1,8 +1,8 @@
 Package: ghit
 Type: Package
 Title: Lightweight GitHub Package Installer
-Version: 0.2.16
-Date: 2017-02-14
+Version: 0.2.17
+Date: 2017-02-28
 Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"), email = "thosjleeper@gmail.com"),
              person("Imanuel", "Costigan", role = "ctb", email = "i.costigan@me.com"))
 Description: A lightweight, vectorized drop-in replacement for
@@ -18,4 +18,4 @@ Suggests:
 License: MIT + file LICENSE
 URL: https://github.com/cloudyr/ghit
 BugReports: https://github.com/cloudyr/ghit/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

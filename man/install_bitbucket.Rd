@@ -3,12 +3,13 @@
 \name{install_bitbucket}
 \alias{install_bitbucket}
 \alias{install_bitbucket_server}
+\alias{install_bitbucket_server}
 \title{Install R package from Bitbucket}
 \usage{
 install_bitbucket(repo, host = "bitbucket.org", credentials = NULL,
   build_args = NULL, build_vignettes = TRUE, uninstall = FALSE,
-  verbose = FALSE, repos = NULL, type = if (.Platform[["pkgType"]] \%in\%
-  "win.binary") "both" else "source", dependencies = NA, ...)
+  verbose = FALSE, repos = NULL, type = "source", dependencies = NA,
+  ...)
 
 install_bitbucket_server(repo, host = Sys.getenv("BITBUCKET_HOST"),
   credentials = bitbucket_cred(), build_args = NULL,
@@ -103,4 +104,3 @@ unlink(tmp, recursive = TRUE)
 \author{
 Imanuel Costigan
 }
-

@@ -1,3 +1,8 @@
+# CHANGES TO v0.2.17
+
+* Made installation tests conditional on the ability to create a temporary library, hopefully eliminating CRAN errors.
+* The default `type` argument is now "source" rather than `.Platform[["pkgType"]]` on Windows. (#19)
+
 # CHANGES TO v0.2.16
 
 * Better handling of "Suggests" dependencies. Added message about ignoring versions thereof.
