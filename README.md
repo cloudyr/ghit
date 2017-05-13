@@ -1,6 +1,8 @@
 # ghit: Lightweight GitHub Package Installer
 
-**ghit** provides a lightweight alternative to `devtools::install_github()` that uses git2r and the native R package management functionality to install R packages hosted on GitHub. At present, `devtools::install_github()` provides the most convenient way to install development versions of R packages, but devtools has 16 direct package dependencies and is therefore a quite heavy duty package to load simply to install packages.
+*THIS IS A PULL REQUEST EXAMPLE FOR TESTING PURPOSES**
+
+**ghit** provides a lightweight alternative to `devtools::install_github()` that uses git2r and the native R package management functionality to install R packages hosted on GitHub. At present, `devtools::install_github()` provides the most convenient way to install development versions of R packages, but devtools has 16 direct package dependencies and is therefore a quite heavy duty package to load simply to install packages. ghit is therefore a simpler alternative to perform the single task of installing GitHub packages without the rest of devtools.
 
 ghit is therefore a simpler alternative to perform the single task of installing GitHub packages without the rest of devtools. It achieves this by using git2r to pull GitHub packages (including those requiring authentication), and relying on native R tools for building packages, storing those packages in a local and disposable CRAN-like repository, and installing them (and their dependencies) with `install.packages()`. From v0.2.15, an `install_bitbucket()` installer is also provided.
 
