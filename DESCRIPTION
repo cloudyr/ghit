@@ -1,8 +1,8 @@
 Package: ghit
 Type: Package
 Title: Lightweight GitHub Package Installer
-Version: 0.2.17
-Date: 2017-02-28
+Version: 0.2.18
+Date: 2017-06-25
 Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"), email = "thosjleeper@gmail.com"),
              person("Imanuel", "Costigan", role = "ctb", email = "i.costigan@me.com"))
 Description: A lightweight, vectorized drop-in replacement for
