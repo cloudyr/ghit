@@ -1,10 +1,26 @@
 language: r
 sudo: false
 cache: packages
+matrix:
+  include:
+    - os: linux
+      dist: precise
+      sudo: false
+    - os: linux
+      dist: trusty
+    - os: osx
+      osx_image: xcode8
+    - os: osx
+      osx_image: xcode6.4
 r_packages:
-- knitr
 - covr
 - drat
+after_failure:
+  email: 
+    recipients:
+     - thosjleeper@gmail.com
+    on_success: change
+    on_failure: change
 after_success:
 - Rscript -e 'library("covr");codecov()'
 - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash
