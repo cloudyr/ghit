@@ -4,14 +4,17 @@ cache: packages
 matrix:
   include:
     - os: linux
-      dist: precise
-      sudo: false
+      r: oldrel
+    - os: linux
+      r: release
+    - os: linux
+      r: devel
     - os: linux
       dist: trusty
+      env: R_CODECOV=true
+      r_check_args: '--use-valgrind'
     - os: osx
-      osx_image: xcode8
-    - os: osx
-      osx_image: xcode6.4
+      osx_image: xcode8.3
 r_packages:
 - covr
 - drat
