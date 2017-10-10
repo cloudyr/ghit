@@ -3,8 +3,14 @@ Type: Package
 Title: Lightweight GitHub Package Installer
 Version: 0.2.18
 Date: 2017-06-25
-Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"), email = "thosjleeper@gmail.com"),
-             person("Imanuel", "Costigan", role = "ctb", email = "i.costigan@me.com"))
+Authors@R: c(person("Thomas J.", "Leeper",
+                    role = c("aut", "cre"), 
+                    email = "thosjleeper@gmail.com",
+                    comment = c(ORCID = "0000-0003-4097-6326")),
+             person("Imanuel", "Costigan", 
+                    role = "ctb", 
+                    email = "i.costigan@me.com")
+            )
 Description: A lightweight, vectorized drop-in replacement for
     'devtools::install_github()' that uses native git and R methods to clone and
     install a package from GitHub. From v0.2.15, also includes an analogue for 
