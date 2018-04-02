@@ -1,4 +1,15 @@
+This package is now deprecated.
+
+No further updates will be made here or sent to CRAN.
+
+Please use [**remotes**](https://cran.r-project.org/package=remotes) instead.
+
+
+
+---
+
 # ghit: Lightweight GitHub Package Installer
+
 
 **ghit** provides a lightweight alternative to `devtools::install_github()` that uses git2r and the native R package management functionality to install R packages hosted on GitHub. At present, `devtools::install_github()` provides the most convenient way to install development versions of R packages, but devtools has 16 direct package dependencies and is therefore a quite heavy duty package to load simply to install packages.
 
